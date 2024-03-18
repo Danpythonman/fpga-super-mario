@@ -1,7 +1,9 @@
 module VgaInterface
 (
-	input clock_50_mhz,
+	input vga_clock,
 	input reset,
+	input [31:0] mario_x,
+	input [31:0] mario_y,
 	output hsync,
 	output vsync,
 	output reg [3:0] vga_red,
@@ -9,21 +11,12 @@ module VgaInterface
 	output reg [3:0] vga_blue
 );
 
-	wire vga_clock;
 	wire [31:0] row;
 	wire [31:0] column;
 	wire display_enable;
 	wire [3:0] red;
 	wire [3:0] green;
 	wire [3:0] blue;
-
-	/*
-	 * Instantiate PLL to generate VGA clock
-	 */
-	pll pll_inst(
-		.inclk0(clock_50_mhz),
-		.c0(vga_clock)
-	);
 
 	/*
 	 * Signal generator. This will give us the row and column of the VGA so that
@@ -49,6 +42,8 @@ module VgaInterface
 		.clk(vga_clock),
 		.row(row),
 		.col(column),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
 		.red(red),
 		.green(green),
 		.blue(blue)

@@ -121,17 +121,19 @@ module DE10_LITE_Golden_Top(
 `endif
 );
 
-	wire vsync;
-	wire hysnc;
-	VgaInterface vgaInterface
+	FinalProject finalProject
 	(
 		.clock_50_mhz(MAX10_CLK1_50),
 		.reset(KEY[1]),
+		.left_switch(SW[9]),
+		.right_switch(SW[0]),
+		.jump_button(KEY[0]),
 		.hsync(VGA_HS),
 		.vsync(VGA_VS),
 		.vga_red(VGA_R),
 		.vga_green(VGA_G),
-		.vga_blue(VGA_B)
+		.vga_blue(VGA_B),
+		.leds(LEDR)
 	);
 
 endmodule
