@@ -1,9 +1,21 @@
 module VgaInterface
+#(
+	parameter BDR = 0,
+	parameter SKY = 1,
+	parameter BLK = 2,
+	parameter GND = 3,
+	parameter MARIO_WIDTH = 42,
+	parameter SCREEN_WIDTH = 640,
+	parameter SCREEN_HEIGHT = 480,
+	parameter BLOCK_WIDTH = 40
+)
 (
 	input vga_clock,
 	input reset,
 	input [31:0] mario_x,
 	input [31:0] mario_y,
+	input byte background [11:0][16:0],
+
 	output hsync,
 	output vsync,
 	output reg [3:0] vga_red,
@@ -37,13 +49,23 @@ module VgaInterface
 	/*
 	 * Draws to the screen.
 	 */
-	VgaDrawer vgaDrawer
-	(
+	VgaDrawer
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.MARIO_WIDTH(MARIO_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) vgaDrawer (
 		.clk(vga_clock),
 		.row(row),
 		.col(column),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		.background(background),
 		.red(red),
 		.green(green),
 		.blue(blue)
