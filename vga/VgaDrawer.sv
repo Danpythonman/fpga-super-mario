@@ -11,10 +11,10 @@ module VgaDrawer
 )
 (
 	input             clk,
-	input      [31:0] row,
-	input      [31:0] col,
-	input      [31:0] mario_x,
-	input      [31:0] mario_y,
+	input      int row,
+	input      int col,
+	input      int mario_x,
+	input      int mario_y,
 	input byte background [11:0][16:0],
 	output reg [3:0]  red,
 	output reg [3:0]  green,

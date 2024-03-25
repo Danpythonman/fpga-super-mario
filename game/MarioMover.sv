@@ -15,9 +15,9 @@ module MarioMover
 	input right,
 	input jump,
 	input byte background [11:0][16:0],
-	output reg [31:0] mario_x,
-	output reg [31:0] mario_y,
-	output [8:0] leds
+	output int mario_x,
+	output int mario_y,
+	output [9:0] leds
 );
 
 	wire movement_clock;
@@ -30,64 +30,47 @@ module MarioMover
 		.movement_clock(movement_clock)
 	);
 
-	initial begin
-		mario_x = 0;
-		mario_y = 360;
-	end
+	int mario_x_intermediate;
+	int mario_y_intermediate;
 
-	always @(posedge movement_clock) begin
-		if (left && right) begin
-			// do nothing
-			mario_x = 0;
-			mario_y = 360;
-			leds = 10'b100000000;
-		end else if (left) begin
-			if (background[mario_y / BLOCK_WIDTH][(mario_x - 1) / BLOCK_WIDTH] == BLK 
-			|| background[(mario_y + MARIO_WIDTH) / BLOCK_WIDTH][(mario_x - 1) / BLOCK_WIDTH] == BLK
-			|| mario_x == 0) begin
-				// do nothing
-				leds = 10'b010000000;
-			end else begin
-				mario_x = mario_x - 1;
-				leds = 10'b001000000;
-			end
-		end else if (right) begin
-			if (background[mario_y / BLOCK_WIDTH][(mario_x + 1 + MARIO_WIDTH) / BLOCK_WIDTH] == BLK 
-			|| background[(mario_y + MARIO_WIDTH) / BLOCK_WIDTH][(mario_x + 1 + MARIO_WIDTH) / BLOCK_WIDTH] == BLK 
-			|| mario_x + MARIO_WIDTH == SCREEN_WIDTH) begin
-				// do nothing
-				leds = 10'b000100000;
-			end else begin
-				mario_x = mario_x + 1;
-				leds = 10'b000010000;
-			end
-		end
+	MarioLeftRightMover
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.MARIO_WIDTH(MARIO_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioLeftRightMover (
+		.movement_clock(movement_clock),
+		.left(left),
+		.right(right),
+		.background(background),
+		.reset(1),
+		.mario_y(mario_y),
+		.mario_x(mario_x)
+	);
 
-		if (~jump)begin
-			if (jump_juice == 0) begin
-				jump_juice = 200;
-			end
-		end
-
-		if (jump_juice > 0) begin
-			if (background[(mario_y - 1) / BLOCK_WIDTH][mario_x / BLOCK_WIDTH] != BLK
-				&& background[(mario_y - 1) / BLOCK_WIDTH][(mario_x + MARIO_WIDTH) / BLOCK_WIDTH] != BLK
-				&& background[(mario_y - 1) / BLOCK_WIDTH][mario_x / BLOCK_WIDTH] != BDR
-			) begin
-				jump_juice = jump_juice - 1;
-				mario_y = mario_y - 1;
-			end else begin
-				jump_juice = 0;
-			end
-		end else if (background[(mario_y + 1 + MARIO_WIDTH) / BLOCK_WIDTH][mario_x / BLOCK_WIDTH] != GND 
-			&& background[(mario_y + 1 + MARIO_WIDTH) / BLOCK_WIDTH][mario_x / BLOCK_WIDTH] != BLK 
-			&& background[(mario_y + 1 + MARIO_WIDTH) / BLOCK_WIDTH][(mario_x + MARIO_WIDTH) / BLOCK_WIDTH] != BLK
-		) begin
-			mario_y = mario_y + 1;
-		end else begin
-			// do nothing
-			leds = 10'b000001000;
-		end
-	end
+	MarioUpDownMover
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.MARIO_WIDTH(MARIO_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioUpDownMover (
+		.movement_clock(movement_clock),
+		.jump(~jump),
+		.background(background),
+		.reset(1),
+		.mario_y(mario_y),
+		.mario_x(mario_x),
+		.leds(leds)
+	);
 
 endmodule

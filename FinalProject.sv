@@ -23,8 +23,8 @@ module FinalProject
 	output [9:0] leds
 );
 
-	wire [31:0] mario_x;
-	wire [31:0] mario_y;
+	int mario_x;
+	int mario_y;
 	wire vga_clock;
 
 	byte background [11:0][16:0] = '{
@@ -70,7 +70,7 @@ module FinalProject
 		.background(background),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
-		.leds(leds[8:0])
+		.leds(leds[9:0])
 	);
 
 	VgaInterface

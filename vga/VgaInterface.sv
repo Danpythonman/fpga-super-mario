@@ -12,8 +12,8 @@ module VgaInterface
 (
 	input vga_clock,
 	input reset,
-	input [31:0] mario_x,
-	input [31:0] mario_y,
+	input int mario_x,
+	input int mario_y,
 	input byte background [11:0][16:0],
 
 	output hsync,
@@ -23,8 +23,8 @@ module VgaInterface
 	output reg [3:0] vga_blue
 );
 
-	wire [31:0] row;
-	wire [31:0] column;
+	int row;
+	int column;
 	wire display_enable;
 	wire [3:0] red;
 	wire [3:0] green;
