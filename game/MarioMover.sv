@@ -4,6 +4,7 @@ module MarioMover
 	parameter SKY = 1,
 	parameter BLK = 2,
 	parameter GND = 3,
+	parameter TKN = 4,
 	parameter MARIO_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -16,8 +17,7 @@ module MarioMover
 	input jump,
 	input byte background [11:0][16:0],
 	output int mario_x,
-	output int mario_y,
-	output [9:0] leds
+	output int mario_y
 );
 
 	wire movement_clock;
@@ -39,6 +39,7 @@ module MarioMover
 		.SKY(SKY),
 		.BLK(BLK),
 		.GND(GND),
+		.TKN(TKN),
 		.MARIO_WIDTH(MARIO_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
@@ -59,6 +60,7 @@ module MarioMover
 		.SKY(SKY),
 		.BLK(BLK),
 		.GND(GND),
+		.TKN(TKN),
 		.MARIO_WIDTH(MARIO_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
@@ -69,8 +71,7 @@ module MarioMover
 		.background(background),
 		.reset(1),
 		.mario_y(mario_y),
-		.mario_x(mario_x),
-		.leds(leds)
+		.mario_x(mario_x)
 	);
 
 endmodule

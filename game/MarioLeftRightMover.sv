@@ -4,6 +4,7 @@ module MarioLeftRightMover
 	parameter SKY = 1,
 	parameter BLK = 2,
 	parameter GND = 3,
+	parameter TKN = 4,
 	parameter MARIO_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,

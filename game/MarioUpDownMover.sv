@@ -4,6 +4,7 @@ module MarioUpDownMover
 	parameter SKY = 1,
 	parameter BLK = 2,
 	parameter GND = 3,
+    parameter TKN = 4,
 	parameter MARIO_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -15,8 +16,7 @@ module MarioUpDownMover
 	input jump,
 	input byte background [11:0][16:0],
 	input int mario_x,
-	output int mario_y,
-    output reg [9:0] leds
+	output int mario_y
 );
 
 	int previous_mario_y = 100;
@@ -107,42 +107,30 @@ module MarioUpDownMover
 	 * on state.
 	 */
 	always_ff@(posedge movement_clock or negedge reset) begin
-        leds = 10'b1111111111;
         case(state)
             RESET: begin
                 mario_y <= 360;
                 pixels_to_jump <= 150;
                 pixel_velocity <= 0;
-                leds = 10'b1111111110;
             end
             STATIONARY: begin
                 mario_y <= previous_mario_y;
                 pixels_to_jump <= 150;
-                leds = 10'b1111111101;
             end
             ABOUT_TO_JUMP: begin
                 mario_y <= previous_mario_y;
                 pixels_to_jump <= 150;
                 pixel_velocity <= 0;
-                leds = 10'b1111111011;
             end
             JUMPING: begin
                 mario_y <= previous_mario_y - 1;
                 pixels_to_jump <= previous_pixels_to_jump - 1;
                 pixel_velocity <= 0;
-                if (pixels_to_jump > 20) begin
-                    leds = 10'b0000011111;
-                end else if (pixels_to_jump <= 0) begin
-                    leds = 10'b0000011110;
-                end else begin
-                    leds = 10'b0000011100;
-                end
             end
             FALLING: begin
                 mario_y <= previous_mario_y + 1;
                 pixels_to_jump <= 150;
                 pixel_velocity <= 0;
-                leds = 10'b1111101111;
             end
         endcase
     end

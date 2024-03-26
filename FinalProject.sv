@@ -4,6 +4,7 @@ module FinalProject
 	parameter SKY = 1,
 	parameter BLK = 2,
 	parameter GND = 3,
+	parameter TKN = 4,
 	parameter MARIO_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -26,6 +27,7 @@ module FinalProject
 	int mario_x;
 	int mario_y;
 	wire vga_clock;
+	logic [2:0] touch;
 
 	byte background [11:0][16:0] = '{
 	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
@@ -34,15 +36,19 @@ module FinalProject
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY },
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 	'{ SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY },
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
 };
+
+/*
+bottom right is top left
+*/
 
 	/*
 	 * Instantiate PLL to generate VGA clock
@@ -58,6 +64,7 @@ module FinalProject
 		.SKY(SKY),
 		.BLK(BLK),
 		.GND(GND),
+		.TKN(TKN),
 		.MARIO_WIDTH(MARIO_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
@@ -69,8 +76,7 @@ module FinalProject
 		.jump(jump_button),
 		.background(background),
 		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.leds(leds[9:0])
+		.mario_y(mario_y)	
 	);
 
 	VgaInterface
@@ -79,6 +85,7 @@ module FinalProject
 		.SKY(SKY),
 		.BLK(BLK),
 		.GND(GND),
+		.TKN(TKN),
 		.MARIO_WIDTH(MARIO_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
@@ -95,5 +102,55 @@ module FinalProject
 		.vga_green(vga_green),
 		.vga_blue(vga_blue)
 	);
+
+	MarioCoin
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.TKN(TKN),
+		.MARIO_WIDTH(MARIO_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioCoin1(
+		.clk(vga_clock),
+		.x(6),
+		.y(6),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
+		.touch(touch[0])
+	);
+
+		MarioCoin
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.TKN(TKN),
+		.MARIO_WIDTH(MARIO_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioCoin2(
+		.clk(vga_clock),
+		.x(1),
+		.y(15),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
+		.touch(touch[1])
+	);
+
+	always@(posedge vga_clock)begin
+		if(touch[0])begin
+			background [6][6] = SKY;
+		end else if(touch[1])begin
+			background [1][15] = SKY; // fix
+		end
+	end
+
+	assign leds = touch;
 
 endmodule
