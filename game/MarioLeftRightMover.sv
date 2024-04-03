@@ -5,7 +5,7 @@ module MarioLeftRightMover
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
-	parameter MARIO_WIDTH = 42,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -27,9 +27,9 @@ module MarioLeftRightMover
 	int mario_bottom;
 
 	assign mario_left = (previous_mario_x - 1) / BLOCK_WIDTH;
-	assign mario_right = (previous_mario_x + 1 + MARIO_WIDTH) / BLOCK_WIDTH;
+	assign mario_right = (previous_mario_x + 1 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 	assign mario_top = mario_y / BLOCK_WIDTH;
-	assign mario_bottom = (mario_y + MARIO_WIDTH - 1) / BLOCK_WIDTH;
+	assign mario_bottom = (mario_y + CHARACTER_WIDTH - 1) / BLOCK_WIDTH;
 
 	/*
 	 * Mario is either stationary, moving left, or moving right.
@@ -63,7 +63,7 @@ module MarioLeftRightMover
 				else if (right)
 					if (background[mario_top][mario_right] == BLK 
 							|| background[mario_bottom][mario_right] == BLK 
-							|| mario_x + MARIO_WIDTH >= SCREEN_WIDTH)
+							|| mario_x + CHARACTER_WIDTH >= SCREEN_WIDTH)
 						next_state = STATIONARY;
 					else
 						next_state = RIGHT;
@@ -85,7 +85,7 @@ module MarioLeftRightMover
 			RIGHT: begin
 				if (background[mario_top][mario_right] == BLK 
 						|| background[mario_bottom][mario_right] == BLK 
-						|| mario_x + MARIO_WIDTH >= SCREEN_WIDTH)
+						|| mario_x + CHARACTER_WIDTH >= SCREEN_WIDTH)
 					next_state = STATIONARY;
 				else if (left && right)
 					next_state = STATIONARY;

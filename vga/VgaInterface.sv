@@ -6,7 +6,7 @@ module VgaInterface
 	parameter GND = 3, // ground
 	parameter TKN = 4, // coin
 	parameter CLK = 5, // countdown clock
-	parameter MARIO_WIDTH = 42,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -16,6 +16,8 @@ module VgaInterface
 	input reset,
 	input int mario_x,
 	input int mario_y,
+	input int goomba_x,
+	input int goomba_y,
 	input byte background [11:0][16:0],
 
 	output hsync,
@@ -59,7 +61,7 @@ module VgaInterface
 		.GND(GND),
 		.TKN(TKN),
 		.CLK(CLK),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
@@ -69,6 +71,8 @@ module VgaInterface
 		.col(column),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		.goomba_x(goomba_x),
+		.goomba_y(goomba_y),
 		.background(background),
 		.red(red),
 		.green(green),

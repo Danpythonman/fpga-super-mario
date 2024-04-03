@@ -5,7 +5,7 @@ module MarioUpDownMover
 	parameter BLK = 2,
 	parameter GND = 3,
     parameter TKN = 4,
-	parameter MARIO_WIDTH = 42,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -29,9 +29,9 @@ module MarioUpDownMover
     int pixel_velocity;
 
 	assign mario_left = (mario_x + 1) / BLOCK_WIDTH;
-	assign mario_right = (mario_x - 1 + MARIO_WIDTH) / BLOCK_WIDTH;
+	assign mario_right = (mario_x - 1 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 	assign mario_top = (previous_mario_y - 1) / BLOCK_WIDTH;
-	assign mario_bottom = (previous_mario_y + 1 + MARIO_WIDTH) / BLOCK_WIDTH;
+	assign mario_bottom = (previous_mario_y + 1 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 
 	/*
 	 * Mario is either stationary, moving up (jumping), or moving down

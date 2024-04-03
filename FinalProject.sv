@@ -6,7 +6,7 @@ module FinalProject
 	parameter GND = 3,
 	parameter TKN = 4,
 	parameter CLK = 5,
-	parameter MARIO_WIDTH = 42,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -27,6 +27,8 @@ module FinalProject
 
 	int mario_x;
 	int mario_y;
+	int goomba_x;
+	int goomba_y;
 	wire vga_clock;
 	logic [2:0] touch;
 
@@ -66,7 +68,7 @@ bottom right is top left
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
@@ -79,6 +81,26 @@ bottom right is top left
 		.mario_x(mario_x),
 		.mario_y(mario_y)	
 	);
+	
+		GoombaMover
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) goombaMover (
+		.vga_clock(vga_clock),
+		.left(left_switch),
+		.right(right_switch),
+		.jump(jump_button),
+		.background(background),
+		.goomba_x(goomba_x),
+		.goomba_y(goomba_y)	
+	);
 
 	VgaInterface
 	#(
@@ -87,7 +109,7 @@ bottom right is top left
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
@@ -96,6 +118,8 @@ bottom right is top left
 		.reset(reset),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		.goomba_x(goomba_x),
+		.goomba_y(goomba_y),
 		.background(background),
 		.hsync(hsync),
 		.vsync(vsync),
@@ -111,7 +135,7 @@ bottom right is top left
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
@@ -131,7 +155,7 @@ bottom right is top left
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)

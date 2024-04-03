@@ -1,10 +1,9 @@
-module MarioMover
+module GoombaMover
 #(
 	parameter BDR = 0,
 	parameter SKY = 1,
 	parameter BLK = 2,
 	parameter GND = 3,
-	parameter TKN = 4,
 	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -16,13 +15,12 @@ module MarioMover
 	input right,
 	input jump,
 	input byte background [11:0][16:0],
-	output int mario_x,
-	output int mario_y
+	output int goomba_x,
+	output int goomba_y
 );
 
 	wire movement_clock;
 
-	reg [31:0] jump_juice = 0;
 
 	MovementClock movementClock
 	(
@@ -30,48 +28,25 @@ module MarioMover
 		.movement_clock(movement_clock)
 	);
 
-	int mario_x_intermediate;
-	int mario_y_intermediate;
+	assign goomba_y = 360;
 
-	MarioLeftRightMover
+	GoombaLeftRightMover
 	#(
 		.BDR(BDR),
 		.SKY(SKY),
 		.BLK(BLK),
 		.GND(GND),
-		.TKN(TKN),
 		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioLeftRightMover (
+	) goombaLeftRightMover (
 		.movement_clock(movement_clock),
-		.left(left),
-		.right(right),
 		.background(background),
 		.reset(1),
-		.mario_y(mario_y),
-		.mario_x(mario_x)
+		.goomba_y(goomba_y),
+		.goomba_x(goomba_x)
 	);
 
-	MarioUpDownMover
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioUpDownMover (
-		.movement_clock(movement_clock),
-		.jump(~jump),
-		.background(background),
-		.reset(1),
-		.mario_y(mario_y),
-		.mario_x(mario_x)
-	);
 
 endmodule
