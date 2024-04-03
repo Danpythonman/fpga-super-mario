@@ -5,6 +5,7 @@ module VgaDrawer
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
+	parameter CLK = 5, // clock countdown
 	parameter MARIO_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -48,6 +49,7 @@ module VgaDrawer
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
+		.CLK(CLK),
 		.MARIO_WIDTH(MARIO_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
@@ -85,6 +87,7 @@ module VgaEnvironmentDrawer
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
+	parameter CLK = 5,
 	parameter MARIO_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -108,6 +111,10 @@ module VgaEnvironmentDrawer
 	wire [3:0] coin_green;
 	wire [3:0] coin_blue;
 
+	wire [3:0] number_red;
+	wire [3:0] number_green;
+	wire [3:0] number_blue;
+
 	VgaCoin vgaCoin(
 		.x(col % 40),
 		.y(row % 40),
@@ -118,6 +125,18 @@ module VgaEnvironmentDrawer
 		.red(coin_red),
 		.green(coin_green),
 		.blue(coin_blue)
+	);
+
+	VgaNumber vgaNumber(
+		.x(col % 40),
+		.y(row % 40),
+		.background(background),
+		.background_red(background_red),
+		.background_green(background_green),
+		.background_blue(background_blue),
+		.red(number_red),
+		.green(number_green),
+		.blue(number_blue)
 	);
 
 	always @(col, row) begin
@@ -141,6 +160,10 @@ module VgaEnvironmentDrawer
 				background_red   <= 4'd0;
 				background_green <= 4'd9;
 				background_blue  <= 4'd15;
+		end else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CLK) begin
+				background_red   <= 4'd0;
+				background_green <= 4'd0;
+				background_blue  <= 4'd0; 
 		end else begin
 			background_red   <= 4'h0;
 			background_green <= 4'h0;
@@ -153,12 +176,18 @@ module VgaEnvironmentDrawer
 			red <= coin_red;
 			green <= coin_green;
 			blue <= coin_blue;
+		end 
+		else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CLK)begin
+			red <= number_red;
+			green <= number_green;
+			blue <= number_blue;
 		end else begin
 			red <= background_red;
 			green <= background_green;
 			blue <= background_blue;
 		end
 	end
+
 
 endmodule
 

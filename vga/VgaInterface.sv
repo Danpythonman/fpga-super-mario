@@ -1,10 +1,11 @@
 module VgaInterface
 #(
-	parameter BDR = 0,
-	parameter SKY = 1,
-	parameter BLK = 2,
-	parameter GND = 3,
-	parameter TKN = 4,
+	parameter BDR = 0, // border
+	parameter SKY = 1, // sky
+	parameter BLK = 2, // block
+	parameter GND = 3, // ground
+	parameter TKN = 4, // coin
+	parameter CLK = 5, // countdown clock
 	parameter MARIO_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -57,6 +58,7 @@ module VgaInterface
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
+		.CLK(CLK),
 		.MARIO_WIDTH(MARIO_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
