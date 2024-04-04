@@ -5,7 +5,8 @@ module FinalProject
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
-	parameter MARIO_WIDTH = 42,
+	parameter CLK = 5,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -28,6 +29,34 @@ module FinalProject
 	int row;
 	int column;
 	wire display_enable;
+ 
+	int mario_x;
+	int mario_y;
+	int goomba_x;
+	int goomba_y;
+	wire vga_clock;
+	logic [2:0] touch;
+
+	byte background [11:0][16:0] = '{
+	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
+	'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
+	'{ SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY },
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ BDR, CLK, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
+};
+
+/*
+bottom right is top left
+*/
 
 	/*
 	 * Signal generator. This will give us the row and column of the VGA so that
@@ -104,6 +133,112 @@ module FinalProject
 		.vga_green   (level1_vga_green),
 		.vga_blue    (level1_vga_blue),
 		.leds        (level1_leds)
+  )
+	MarioMover
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.TKN(TKN),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioMover (
+		.vga_clock(vga_clock),
+		.left(left_switch),
+		.right(right_switch),
+		.jump(jump_button),
+		.background(background),
+		.mario_x(mario_x),
+		.mario_y(mario_y)	
+	);
+	
+		GoombaMover
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) goombaMover (
+		.vga_clock(vga_clock),
+		.left(left_switch),
+		.right(right_switch),
+		.jump(jump_button),
+		.background(background),
+		.goomba_x(goomba_x),
+		.goomba_y(goomba_y)	
+	);
+
+	VgaInterface
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.TKN(TKN),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) vgaInterface (
+		.vga_clock(vga_clock),
+		.reset(reset),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
+		.goomba_x(goomba_x),
+		.goomba_y(goomba_y),
+		.background(background),
+		.hsync(hsync),
+		.vsync(vsync),
+		.vga_red(vga_red),
+		.vga_green(vga_green),
+		.vga_blue(vga_blue)
+	);
+
+	MarioCoin
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.TKN(TKN),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioCoin1(
+		.clk(vga_clock),
+		.x(6),
+		.y(6),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
+		.touch(touch[0])
+	);
+
+		MarioCoin
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.TKN(TKN),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioCoin2(
+		.clk(vga_clock),
+		.x(1),
+		.y(15),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
+		.touch(touch[1])
 	);
 
 //	assign vga_red = level1_vga_red;

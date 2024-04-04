@@ -5,7 +5,7 @@ module MarioCoin
 	parameter BLK = 2,
 	parameter GND = 3,
     parameter TKN = 4,
-	parameter MARIO_WIDTH = 42,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -26,9 +26,9 @@ module MarioCoin
 	int mario_bottom;
 
     assign mario_left = (mario_x + 10) / BLOCK_WIDTH;
-	assign mario_right = (mario_x - 10 + MARIO_WIDTH) / BLOCK_WIDTH;
+	assign mario_right = (mario_x - 10 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 	assign mario_top = (mario_y + 10) / BLOCK_WIDTH;
-	assign mario_bottom = (mario_y - 10 + MARIO_WIDTH) / BLOCK_WIDTH;
+	assign mario_bottom = (mario_y - 10 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 
     always@(posedge clk)begin
         if(mario_left == x && mario_top == y || mario_left == x && mario_bottom == y 

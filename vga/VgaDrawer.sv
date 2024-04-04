@@ -5,7 +5,8 @@ module VgaDrawer
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
-	parameter MARIO_WIDTH = 42,
+	parameter CLK = 5, // clock countdown
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -16,6 +17,8 @@ module VgaDrawer
 	input      int col,
 	input      int mario_x,
 	input      int mario_y,
+	input int goomba_x,
+	input int goomba_y,
 	input byte background [11:0][16:0],
 	output reg [3:0]  red,
 	output reg [3:0]  green,
@@ -30,6 +33,10 @@ module VgaDrawer
 	wire [3:0] mario_green;
 	wire [3:0] mario_blue;
 
+	wire [3:0] goomba_red;
+	wire [3:0] goomba_green;
+	wire [3:0] goomba_blue;
+
 	VgaMarioDrawer vgaMarioDrawer (
 		.x(col - mario_x),
 		.y(row - mario_y),
@@ -42,13 +49,26 @@ module VgaDrawer
 		.blue(mario_blue)
 	);
 
+		VgaGoombaDrawer vgaGoombaDrawer (
+		.x(col - goomba_x),
+		.y(row - goomba_y),
+		.background(background),
+		.background_red(background_red),
+		.background_green(background_green),
+		.background_blue(background_blue),
+		.red(goomba_red),
+		.green(goomba_green),
+		.blue(goomba_blue)
+	);
+
 	VgaEnvironmentDrawer #(
 		.BDR(BDR),
 		.SKY(SKY),
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CLK(CLK),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
@@ -63,13 +83,19 @@ module VgaDrawer
 	);
 
 	always @(col, row) begin
-		if (col >= mario_x && col <= mario_x + MARIO_WIDTH
-			&& row >= mario_y && row <= mario_y + MARIO_WIDTH
+		if (col >= mario_x && col <= mario_x + CHARACTER_WIDTH
+			&& row >= mario_y && row <= mario_y + CHARACTER_WIDTH
 		) begin
 			red <= mario_red;
 			green <= mario_green;
 			blue <= mario_blue;
-		end else begin
+		end else if(col >= goomba_x && col <= goomba_x + CHARACTER_WIDTH
+			&& row >= goomba_y && row <= goomba_y + CHARACTER_WIDTH
+		) begin 
+			red <= goomba_red;
+			green <= goomba_green;
+			blue <= goomba_blue;
+	end else begin
 			red <= background_red;
 			green <= background_green;
 			blue <= background_blue;
@@ -85,7 +111,8 @@ module VgaEnvironmentDrawer
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
-	parameter MARIO_WIDTH = 42,
+	parameter CLK = 5,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -108,6 +135,10 @@ module VgaEnvironmentDrawer
 	wire [3:0] coin_green;
 	wire [3:0] coin_blue;
 
+	wire [3:0] number_red;
+	wire [3:0] number_green;
+	wire [3:0] number_blue;
+
 	VgaCoin vgaCoin(
 		.x(col % 40),
 		.y(row % 40),
@@ -118,6 +149,18 @@ module VgaEnvironmentDrawer
 		.red(coin_red),
 		.green(coin_green),
 		.blue(coin_blue)
+	);
+
+	VgaNumber vgaNumber(
+		.x(col % 40),
+		.y(row % 40),
+		.background(background),
+		.background_red(background_red),
+		.background_green(background_green),
+		.background_blue(background_blue),
+		.red(number_red),
+		.green(number_green),
+		.blue(number_blue)
 	);
 
 	always @(col, row) begin
@@ -141,6 +184,10 @@ module VgaEnvironmentDrawer
 				background_red   <= 4'd0;
 				background_green <= 4'd9;
 				background_blue  <= 4'd15;
+		end else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CLK) begin
+				background_red   <= 4'd0;
+				background_green <= 4'd0;
+				background_blue  <= 4'd0; 
 		end else begin
 			background_red   <= 4'h0;
 			background_green <= 4'h0;
@@ -153,12 +200,18 @@ module VgaEnvironmentDrawer
 			red <= coin_red;
 			green <= coin_green;
 			blue <= coin_blue;
+		end 
+		else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CLK)begin
+			red <= number_red;
+			green <= number_green;
+			blue <= number_blue;
 		end else begin
 			red <= background_red;
 			green <= background_green;
 			blue <= background_blue;
 		end
 	end
+
 
 endmodule
 
