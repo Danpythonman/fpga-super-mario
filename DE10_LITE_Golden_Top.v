@@ -121,13 +121,60 @@ module DE10_LITE_Golden_Top(
 `endif
 );
 
+	wire [9:0] fake_leds;
+	wire vga_clock;
+	wire useless_clock_that_were_not_gonna_use;
+	wire spi_clock;
+	wire spi_clock_shifted;
+
+	pll_vga pll_vga_inst(
+		.inclk0(MAX10_CLK1_50),
+		.c0(vga_clock)
+	);
+
+	pll_accelerometer pll_accelerometer_inst(
+		.inclk0(MAX10_CLK1_50),
+		.c0(useless_clock_that_were_not_gonna_use),
+		.c1(spi_clock),
+		.c2(spi_clock_shifted)
+	);
+
+	wire left;
+	wire right;
+	wire jump;
+
+	AccelerometerMovement
+	(
+		.clk(spi_clock),
+		.spi_clk(spi_clock_shifted),
+		.reset(KEY[1]),
+		.button(KEY[0]),
+		.left(left),
+		.SW(SW),
+		.HEX5(HEX5),
+		.HEX4(HEX4),
+		.HEX3(HEX3),
+		.HEX2(HEX2),
+		.HEX1(HEX1),
+		.HEX0(HEX0),
+		.LEDR(fake_leds),
+		.right(right),
+		.jump(jump),
+		.GSENSOR_CS_N(GSENSOR_CS_N),
+		.GSENSOR_INT(GSENSOR_INT),
+		.GSENSOR_SCLK(GSENSOR_SCLK),
+		.GSENSOR_SDI(GSENSOR_SDI),
+		.GSENSOR_SDO(GSENSOR_SDO)
+	);
+
 	FinalProject finalProject
 	(
-		.clock_50_mhz(MAX10_CLK1_50),
+		.vga_clock(vga_clock),
 		.reset(KEY[1]),
-		.left_switch(SW[9]),
-		.right_switch(SW[0]),
-		.jump_button(KEY[0]),
+		.left_switch(left),
+		.right_switch(right),
+		.jump_button(~jump),
+		.start_button(KEY[0]),
 		.hsync(VGA_HS),
 		.vsync(VGA_VS),
 		.vga_red(VGA_R),

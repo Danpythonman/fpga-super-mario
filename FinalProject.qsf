@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 10M50DAF484C6GES
 set_global_assignment -name TOP_LEVEL_ENTITY DE10_LITE_Golden_Top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 15.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "17:45:13 JUNE 17,2016"
-set_global_assignment -name LAST_QUARTUS_VERSION "22.1std.2 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "22.1std.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 484
@@ -434,7 +434,6 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_boundary_scan
 set_global_assignment -name SYSTEMVERILOG_FILE game/MarioCoin.sv
 set_global_assignment -name VERILOG_FILE DE10_LITE_Golden_Top.v
-set_global_assignment -name QIP_FILE ip/pll.qip
 set_global_assignment -name VERILOG_FILE vga/VgaSignalGenerator.v
 set_global_assignment -name SYSTEMVERILOG_FILE vga/VgaInterface.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/VgaDrawer.sv
@@ -445,6 +444,16 @@ set_global_assignment -name SYSTEMVERILOG_FILE FinalProject.sv
 set_global_assignment -name SYSTEMVERILOG_FILE game/MarioLeftRightMover.sv
 set_global_assignment -name SYSTEMVERILOG_FILE game/MarioUpDownMover.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/VgaCoin.sv
+set_global_assignment -name SYSTEMVERILOG_FILE accelerometer/SpiSerializerDeserializer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE accelerometer/SpiController.sv
+set_global_assignment -name SYSTEMVERILOG_FILE accelerometer/AccelerometerMovement.sv
+set_global_assignment -name QIP_FILE ip/vga/pll_vga.qip
+set_global_assignment -name QIP_FILE ip/accelerometer/pll_accelerometer.qip
+set_global_assignment -name SYSTEMVERILOG_FILE accelerometer/DisplayValues.sv
+set_global_assignment -name SYSTEMVERILOG_FILE accelerometer/NumberDisplay.sv
+set_global_assignment -name SYSTEMVERILOG_FILE levels/Level1.sv
+set_global_assignment -name SYSTEMVERILOG_FILE game/SecondsCounter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE vga/StartScreenDrawer.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/Numbers/Number1.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/Numbers/Number2.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/VgaNumber.sv
