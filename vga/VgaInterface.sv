@@ -63,15 +63,21 @@ module VgaInterface
 	/*
 	 * Only write colors to a pixel if display is enabled.
 	 */
-	always @(posedge vga_clock) begin
-		if (display_enable == 1'b1) begin
-			vga_red   <= red;
-			vga_green <= green;
-			vga_blue  <= blue;
-		end else begin
+	always @(posedge vga_clock or negedge reset) begin
+		if (!reset) begin
 			vga_red   <= 4'b0000;
 			vga_green <= 4'b0000;
 			vga_blue  <= 4'b0000;
+		end else begin
+			if (display_enable == 1'b1) begin
+				vga_red   <= red;
+				vga_green <= green;
+				vga_blue  <= blue;
+			end else begin
+				vga_red   <= 4'b0000;
+				vga_green <= 4'b0000;
+				vga_blue  <= 4'b0000;
+			end
 		end
 	end
 

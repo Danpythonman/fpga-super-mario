@@ -12,6 +12,7 @@ module MarioMover
 )
 (
 	input vga_clock,
+	input reset,
 	input left,
 	input right,
 	input jump,
@@ -49,7 +50,7 @@ module MarioMover
 		.left(left),
 		.right(right),
 		.background(background),
-		.reset(1),
+		.reset(reset),
 		.mario_y(mario_y),
 		.mario_x(mario_x)
 	);
@@ -69,7 +70,7 @@ module MarioMover
 		.movement_clock(movement_clock),
 		.jump(~jump),
 		.background(background),
-		.reset(1),
+		.reset(reset),
 		.mario_y(mario_y),
 		.mario_x(mario_x)
 	);

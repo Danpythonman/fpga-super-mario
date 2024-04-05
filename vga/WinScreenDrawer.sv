@@ -1,4 +1,4 @@
-module StartScreenDrawer
+module WinScreenDrawer
 #(
 	parameter BDR = 0,
 	parameter SKY = 1,
@@ -30,19 +30,19 @@ module StartScreenDrawer
 	logic [2:0] touch;
 
 	byte background [11:0][16:0] = '{
-	'{ BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR},
-	'{ BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, SKY, BDR, SKY, BDR, SKY, SKY, BDR, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR},
+	'{ BDR, BDR, BDR, BDR, BDR, BDR, SKY, SKY, SKY, SKY, SKY, BDR, BDR, BDR, BDR, BDR, BDR},
+	'{ BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR},
+	'{ BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR},
 
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, SKY, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, SKY, SKY, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, SKY, SKY, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+	'{ BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR},
+	'{ BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR},
+	'{ BDR, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR},
+	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR},
 
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR},
-	'{ BDR, SKY, SKY, SKY, BDR, BDR, SKY, BDR, SKY, BDR, BDR, SKY, SKY, BDR, SKY, SKY, BDR},
-	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+	'{ BDR, BDR, SKY, SKY, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, SKY, SKY, BDR, BDR},
+	'{ BDR, BDR, SKY, SKY, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, SKY, SKY, BDR, BDR},
+	'{ BDR, BDR, SKY, SKY, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, SKY, SKY, BDR, BDR},
 	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR}
 };
 
@@ -67,6 +67,8 @@ y (down to up)[0-11]
 		.reset(reset),
 		.mario_x(200),
 		.mario_y(200),
+		.goomba_x(1000),
+		.goomba_y(1000),
 		.background(background),
 		.row(row),
 		.column(column),

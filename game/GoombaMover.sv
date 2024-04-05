@@ -11,6 +11,7 @@ module GoombaMover
 )
 (
 	input vga_clock,
+	input reset,
 	input left,
 	input right,
 	input jump,
@@ -20,7 +21,6 @@ module GoombaMover
 );
 
 	wire movement_clock;
-
 
 	MovementClock movementClock
 	(
@@ -43,7 +43,7 @@ module GoombaMover
 	) goombaLeftRightMover (
 		.movement_clock(movement_clock),
 		.background(background),
-		.reset(1),
+		.reset(reset),
 		.goomba_y(goomba_y),
 		.goomba_x(goomba_x)
 	);

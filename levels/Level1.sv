@@ -5,7 +5,7 @@ module Level1
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
-	parameter MARIO_WIDTH = 42,
+	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
@@ -16,12 +16,14 @@ module Level1
 	input left_switch,
 	input right_switch,
 	input jump_button,
-	input      int row,
-	input      int column,
+	input int row,
+	input int column,
 	input display_enable,
 	output [3:0] vga_red,
 	output [3:0] vga_green,
 	output [3:0] vga_blue,
+	output win,
+	output lose,
 	output [9:0] leds
 );
 
@@ -34,11 +36,11 @@ module Level1
 	'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
 	'{ SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+	'{ SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY },
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY },
+	'{ SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY },
 	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 
 	'{ SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
@@ -50,6 +52,18 @@ module Level1
 x (right to left)[0-16]
 y (down to up)[0-11]
 */
+	int goomba_x;
+	int goomba_y;
+	int number_of_coins = 2;
+
+	int seconds;
+
+	SecondsCounter secondsCounter
+	(
+		.vga_clock(vga_clock),
+		.reset(reset),
+		.seconds_count(seconds)
+	);
 
 	MarioMover
 	#(
@@ -58,18 +72,40 @@ y (down to up)[0-11]
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
 	) marioMover (
 		.vga_clock(vga_clock),
+		.reset(reset),
 		.left(left_switch),
 		.right(right_switch),
 		.jump(jump_button),
 		.background(background),
 		.mario_x(mario_x),
 		.mario_y(mario_y)	
+	);
+
+	GoombaMover
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) goombaMover (
+		.vga_clock(vga_clock),
+		.reset(reset),
+		.left(left_switch),
+		.right(right_switch),
+		.jump(jump_button),
+		.background(background),
+		.goomba_x(goomba_x),
+		.goomba_y(goomba_y)	
 	);
 
 	VgaInterface
@@ -79,7 +115,7 @@ y (down to up)[0-11]
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
@@ -88,6 +124,8 @@ y (down to up)[0-11]
 		.reset(reset),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		.goomba_x(goomba_x),
+		.goomba_y(goomba_y),
 		.background(background),
 		.row(row),
 		.column(column),
@@ -104,12 +142,13 @@ y (down to up)[0-11]
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioCoin1 (
+	) marioCoin1(
 		.clk(vga_clock),
+		.reset(reset),
 		.x(6),
 		.y(6),
 		.mario_x(mario_x),
@@ -124,12 +163,13 @@ y (down to up)[0-11]
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.MARIO_WIDTH(MARIO_WIDTH),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
 		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioCoin2 (
+	) marioCoin2(
 		.clk(vga_clock),
+		.reset(reset),
 		.x(14),
 		.y(2),
 		.mario_x(mario_x),
@@ -137,14 +177,21 @@ y (down to up)[0-11]
 		.touch(touch[1])
 	);
 
-	always@(posedge vga_clock)begin
-		if(touch[0])begin
-			background [6][6] = SKY; // [y][x]
-		end else if(touch[1])begin
-			background [2][14] = SKY; // [y][x]
+	always@(posedge vga_clock or negedge reset) begin
+		if (!reset) begin
+			number_of_coins <= 2;
+		end else begin
+			if (touch[0]) begin
+				background [6][6] <= SKY; // [y][x]
+				number_of_coins <= number_of_coins - 1;
+			end else if(touch[1])begin
+				background [2][14] <= SKY; // [y][x]
+				number_of_coins <= number_of_coins - 1;
+			end
 		end
 	end
 
-	assign leds = touch;
+	assign win = number_of_coins == 0;
+	assign lose = seconds == 0;
 
 endmodule

@@ -12,6 +12,7 @@ module MarioCoin
 )
 (
     input clk,
+    input reset,
     input int x,
     input int y,
     input int mario_x,
@@ -30,13 +31,17 @@ module MarioCoin
 	assign mario_top = (mario_y + 10) / BLOCK_WIDTH;
 	assign mario_bottom = (mario_y - 10 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 
-    always@(posedge clk)begin
-        if(mario_left == x && mario_top == y || mario_left == x && mario_bottom == y 
-        || mario_right == x && mario_top == y || mario_right == x && mario_bottom == y)begin 
-            touch = 1;
-        end
-        else begin
-            touch = 0;
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
+            touch <= 0;
+        end else begin
+            if (mario_left == x && mario_top == y || mario_left == x && mario_bottom == y 
+                    || mario_right == x && mario_top == y || mario_right == x && mario_bottom == y) begin
+                touch <= 1;
+            end
+            else begin
+                touch <= 0;
+            end
         end
     end
 

@@ -29,34 +29,12 @@ module FinalProject
 	int row;
 	int column;
 	wire display_enable;
- 
+
 	int mario_x;
 	int mario_y;
 	int goomba_x;
 	int goomba_y;
-	wire vga_clock;
 	logic [2:0] touch;
-
-	byte background [11:0][16:0] = '{
-	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
-	'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
-	'{ SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY },
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-
-	'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-	'{ BDR, CLK, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
-};
-
-/*
-bottom right is top left
-*/
 
 	/*
 	 * Signal generator. This will give us the row and column of the VGA so that
@@ -72,15 +50,6 @@ bottom right is top left
 		.disp_ena(display_enable), // display enable (0 = all colors must be blank)
 		.column(column),           // horizontal pixel coordinate
 		.row(row)                  // vertical pixel coordinate
-	);
-
-	int seconds;
-
-	SecondsCounter secondsCounter
-	(
-		.vga_clock(vga_clock),
-		.reset(reset),
-		.seconds_count(seconds)
 	);
 
 	wire start_screen_vga_clock;
@@ -118,6 +87,8 @@ bottom right is top left
 	wire [3:0] level1_vga_green;
 	wire [3:0] level1_vga_blue;
 	wire [9:0] level1_leds;
+	wire level1_win;
+	wire level1_lose;
 
 	Level1 level1
 	(
@@ -132,129 +103,72 @@ bottom right is top left
 		.vga_red     (level1_vga_red),
 		.vga_green   (level1_vga_green),
 		.vga_blue    (level1_vga_blue),
+		.win(level1_win),
+		.lose(level1_lose),
 		.leds        (level1_leds)
-  )
-	MarioMover
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioMover (
-		.vga_clock(vga_clock),
-		.left(left_switch),
-		.right(right_switch),
-		.jump(jump_button),
-		.background(background),
-		.mario_x(mario_x),
-		.mario_y(mario_y)	
-	);
-	
-		GoombaMover
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) goombaMover (
-		.vga_clock(vga_clock),
-		.left(left_switch),
-		.right(right_switch),
-		.jump(jump_button),
-		.background(background),
-		.goomba_x(goomba_x),
-		.goomba_y(goomba_y)	
 	);
 
-	VgaInterface
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) vgaInterface (
-		.vga_clock(vga_clock),
-		.reset(reset),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.goomba_x(goomba_x),
-		.goomba_y(goomba_y),
-		.background(background),
-		.hsync(hsync),
-		.vsync(vsync),
-		.vga_red(vga_red),
-		.vga_green(vga_green),
-		.vga_blue(vga_blue)
+	wire win_vga_clock;
+	wire win_reset;
+	wire win_left_switch;
+	wire win_right_switch;
+	wire win_jump_button;
+	wire [3:0] win_vga_red;
+	wire [3:0] win_vga_green;
+	wire [3:0] win_vga_blue;
+	wire [9:0] win_leds;
+
+	WinScreenDrawer winScreenDrawer
+	(
+		.vga_clock   (win_vga_clock),
+		.reset       (win_reset),
+		.left_switch (win_left_switch),
+		.right_switch(win_right_switch),
+		.jump_button (win_jump_button),
+		.row(row),
+		.column(column),
+		.display_enable(display_enable),
+		.vga_red     (win_vga_red),
+		.vga_green   (win_vga_green),
+		.vga_blue    (win_vga_blue),
+		.leds        (win_leds)
 	);
 
-	MarioCoin
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioCoin1(
-		.clk(vga_clock),
-		.x(6),
-		.y(6),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.touch(touch[0])
-	);
+	wire game_over_vga_clock;
+	wire game_over_reset;
+	wire game_over_left_switch;
+	wire game_over_right_switch;
+	wire game_over_jump_button;
+	wire [3:0] game_over_vga_red;
+	wire [3:0] game_over_vga_green;
+	wire [3:0] game_over_vga_blue;
+	wire [9:0] game_over_leds;
 
-		MarioCoin
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioCoin2(
-		.clk(vga_clock),
-		.x(1),
-		.y(15),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.touch(touch[1])
+	GameOverScreenDrawer gameOverScreenDrawer
+	(
+		.vga_clock   (game_over_vga_clock),
+		.reset       (game_over_reset),
+		.left_switch (game_over_left_switch),
+		.right_switch(game_over_right_switch),
+		.jump_button (game_over_jump_button),
+		.row(row),
+		.column(column),
+		.display_enable(display_enable),
+		.vga_red     (game_over_vga_red),
+		.vga_green   (game_over_vga_green),
+		.vga_blue    (game_over_vga_blue),
+		.leds        (game_over_leds)
 	);
-
-//	assign vga_red = level1_vga_red;
-//	assign vga_red = level1_vga_red;
-//	assign vga_red = level1_vga_red;
 
 	enum int unsigned {
 		START = 0,
-		LEVEL1 = 2
-//		WIN = 4,
-//		GAME_OVER = 8
+		LEVEL1 = 2,
+		WIN = 4,
+		GAME_OVER = 8
 	} state;
-//	assign leds = 10'b1010101010;
+
 	always @(*) begin
 		leds[9] <= start_button;
-//		leds[2] <= 1;
 		case (state)
 			START: begin
 				leds[0] <= 1;
@@ -266,10 +180,21 @@ bottom right is top left
 				start_screen_right_switch <= right_switch;
 				start_screen_jump_button  <= jump_button;
 				level1_vga_clock    <= 0;
-				level1_reset        <= 1;
+				level1_reset        <= 0;
 				level1_left_switch  <= 0;
 				level1_right_switch <= 0;
 				level1_jump_button  <= 0;
+				win_vga_clock    <= 0;
+				win_reset        <= 0;
+				win_left_switch  <= 0;
+				win_right_switch <= 0;
+				win_jump_button  <= 0;
+				game_over_vga_clock    <= 0;
+				game_over_reset        <= 0;
+				game_over_left_switch  <= 0;
+				game_over_right_switch <= 0;
+				game_over_jump_button  <= 0;
+
 				vga_red      <= start_screen_vga_red;
 				vga_green    <= start_screen_vga_green;
 				vga_blue     <= start_screen_vga_blue;
@@ -278,7 +203,7 @@ bottom right is top left
 				leds[0] <= 0;
 				leds[1] <= 1;
 				start_screen_vga_clock    <= 0;
-				start_screen_reset        <= 1;
+				start_screen_reset        <= 0;
 				start_screen_left_switch  <= 0;
 				start_screen_right_switch <= 0;
 				start_screen_jump_button  <= 0;
@@ -287,9 +212,76 @@ bottom right is top left
 				level1_left_switch  <= left_switch;
 				level1_right_switch <= right_switch;
 				level1_jump_button  <= jump_button;
+				win_vga_clock    <= 0;
+				win_reset        <= 0;
+				win_left_switch  <= 0;
+				win_right_switch <= 0;
+				win_jump_button  <= 0;
+				game_over_vga_clock    <= 0;
+				game_over_reset        <= 0;
+				game_over_left_switch  <= 0;
+				game_over_right_switch <= 0;
+				game_over_jump_button  <= 0;
+
 				vga_red      <= level1_vga_red;
 				vga_green    <= level1_vga_green;
 				vga_blue     <= level1_vga_blue;
+			end
+			WIN: begin
+				leds[0] <= 0;
+				leds[1] <= 1;
+				start_screen_vga_clock    <= 0;
+				start_screen_reset        <= 0;
+				start_screen_left_switch  <= 0;
+				start_screen_right_switch <= 0;
+				start_screen_jump_button  <= 0;
+				level1_vga_clock    <= 0;
+				level1_reset        <= 0;
+				level1_left_switch  <= 0;
+				level1_right_switch <= 0;
+				level1_jump_button  <= 0;
+				win_vga_clock    <= vga_clock;
+				win_reset        <= reset;
+				win_left_switch  <= left_switch;
+				win_right_switch <= right_switch;
+				win_jump_button  <= jump_button;
+				game_over_vga_clock    <= 0;
+				game_over_reset        <= 0;
+				game_over_left_switch  <= 0;
+				game_over_right_switch <= 0;
+				game_over_jump_button  <= 0;
+
+				vga_red      <= win_vga_red;
+				vga_green    <= win_vga_green;
+				vga_blue     <= win_vga_blue;
+			end
+			GAME_OVER: begin
+				leds[0] <= 0;
+				leds[1] <= 1;
+				start_screen_vga_clock    <= 0;
+				start_screen_reset        <= 0;
+				start_screen_left_switch  <= 0;
+				start_screen_right_switch <= 0;
+				start_screen_jump_button  <= 0;
+				level1_vga_clock    <= 0;
+				level1_reset        <= 0;
+				level1_left_switch  <= 0;
+				level1_right_switch <= 0;
+				level1_jump_button  <= 0;
+				win_vga_clock    <= 0;
+				win_reset        <= 0;
+				win_left_switch  <= 0;
+				win_right_switch <= 0;
+				win_jump_button  <= 0;
+				game_over_vga_clock    <= vga_clock;
+				game_over_reset        <= reset;
+				game_over_left_switch  <= left_switch;
+				game_over_right_switch <= right_switch;
+				game_over_jump_button  <= jump_button;
+
+				vga_red      <= game_over_vga_red;
+				vga_green    <= game_over_vga_green;
+				vga_blue     <= game_over_vga_blue;
 			end
 		endcase
 	end
@@ -306,10 +298,18 @@ bottom right is top left
 						state <= START;
 				end
 				LEVEL1: begin
-					if (seconds == 0)
-						state <= LEVEL1;
+					if (level1_win)
+						state <= WIN;
+					else if (level1_lose)
+						state <= GAME_OVER;
 					else
 						state <= LEVEL1;
+				end
+				WIN: begin
+					state <= WIN;
+				end
+				GAME_OVER: begin
+					state <= GAME_OVER;
 				end
 			endcase
 		end
