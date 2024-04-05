@@ -151,7 +151,7 @@ module VgaEnvironmentDrawer
 		.blue(coin_blue)
 	);
 
-	VgaNumber vgaNumber(
+	VgaNumber vgaNumberTensDigit(
 		.x(col % 40),
 		.y(row % 40),
 		.background(background),
@@ -162,6 +162,18 @@ module VgaEnvironmentDrawer
 		.green(number_green),
 		.blue(number_blue)
 	);
+
+	// VgaNumber vgaNumberOnesDigit(
+	// 	.x(col % 40),
+	// 	.y(row % 40),
+	// 	.background(background),
+	// 	.background_red(background_red),
+	// 	.background_green(background_green),
+	// 	.background_blue(background_blue),
+	// 	.red(number_red),
+	// 	.green(number_green),
+	// 	.blue(number_blue)
+	// );
 
 	always @(col, row) begin
 		if (background[row / BLOCK_WIDTH][col/ BLOCK_WIDTH] == GND) begin
@@ -187,7 +199,7 @@ module VgaEnvironmentDrawer
 		end else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CLK) begin
 				background_red   <= 4'd0;
 				background_green <= 4'd0;
-				background_blue  <= 4'd0; 
+				background_blue  <= 4'd0;
 		end else begin
 			background_red   <= 4'h0;
 			background_green <= 4'h0;
