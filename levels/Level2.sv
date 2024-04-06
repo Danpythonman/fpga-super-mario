@@ -1,4 +1,4 @@
-module Level1
+module Level2
 #(
 	parameter BDR = 0,
 	parameter SKY = 1,

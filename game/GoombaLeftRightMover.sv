@@ -13,8 +13,11 @@ module GoombaLeftRightMover
 	input movement_clock,
 	input reset,
 	input byte background [11:0][16:0],
+	input int mario_x,
+	input int mario_y,
 	input int goomba_y,
-	output int goomba_x
+	output int goomba_x,
+	output logic lose
 );
 
 	int previous_goomba_x = 100;
@@ -32,22 +35,27 @@ module GoombaLeftRightMover
 	 * Goomba is either stationary, moving left, or moving right.
 	 */
 	enum int unsigned {
-		RESET      = 0,
-		LEFT       = 4,
-		RIGHT      = 8
+		RESET = 0,
+		LEFT  = 4,
+		RIGHT = 8,
+		LOSE  = 16
 	} state, next_state;
 
 	/*
 	 * Deciding next state.
 	 */
-	always_ff@(posedge movement_clock or negedge reset) begin
+	always_ff@(posedge movement_clock) begin
 		next_state = RESET;
 		case(state)
 			RESET: begin
 				next_state = RIGHT;
 			end
 			LEFT: begin
-				if (background[goomba_top][goomba_left] == BLK 
+				if (mario_x + CHARACTER_WIDTH >= goomba_x
+					&& mario_x <= goomba_x + CHARACTER_WIDTH
+					&& mario_y + CHARACTER_WIDTH >= goomba_y)
+					next_state = LOSE;
+				else if (background[goomba_top][goomba_left] == BLK 
 						|| background[goomba_bottom][goomba_left] == BLK
 						|| goomba_x <= 0)
 					next_state = RIGHT;
@@ -55,12 +63,19 @@ module GoombaLeftRightMover
 					next_state = LEFT;
 			end
 			RIGHT: begin
-				if (background[goomba_top][goomba_right] == BLK 
+				if (mario_x + CHARACTER_WIDTH >= goomba_x
+					&& mario_x <= goomba_x + CHARACTER_WIDTH
+					&& mario_y + CHARACTER_WIDTH >= goomba_y)
+					next_state = LOSE;
+				else if (background[goomba_top][goomba_right] == BLK 
 						|| background[goomba_bottom][goomba_right] == BLK 
 						|| goomba_x + CHARACTER_WIDTH >= SCREEN_WIDTH)
 					next_state = LEFT;
 				else
 					next_state = RIGHT;
+			end
+			LOSE: begin
+				next_state = LOSE;
 			end
 		endcase
 	end
@@ -69,16 +84,23 @@ module GoombaLeftRightMover
 	 * Deciding outputs. This is a Moore-type FSM because outputs are dependant
 	 * on state.
 	 */
-	always_ff@(posedge movement_clock or negedge reset) begin
+	always_ff@(posedge movement_clock) begin
 		case(state)
 			RESET: begin
-				goomba_x <= 100;
+				lose <= 0;
+				goomba_x <= 300;
 			end
 			LEFT: begin
+				lose <= 0;
 				goomba_x <= previous_goomba_x - 1;
 			end
 			RIGHT: begin
+				lose <= 0;
 				goomba_x <= previous_goomba_x + 1;
+			end
+			LOSE: begin
+				lose <= 1;
+				goomba_x <= goomba_x;
 			end
 		endcase
 	end

@@ -470,4 +470,5 @@ set_global_assignment -name SYSTEMVERILOG_FILE game/GoombaMover.sv
 set_global_assignment -name SYSTEMVERILOG_FILE game/GoombaLeftRightMover.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/GameOverScreenDrawer.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/WinScreenDrawer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE levels/Level2.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

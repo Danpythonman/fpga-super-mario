@@ -157,35 +157,35 @@ module VgaEnvironmentDrawer
 	wire [3:0] number_tens_green;
 	wire [3:0] number_tens_blue;
 
-	VgaNumber vgaNumberTensDigit(
-		.x(col % 40),
-		.y(row % 40),
-		.number(number / 10),
-		.background(background),
-		.background_red(background_red),
-		.background_green(background_green),
-		.background_blue(background_blue),
-		.red(number_tens_red),
-		.green(number_tens_green),
-		.blue(number_tens_blue)
-	);
+	// VgaNumber vgaNumberTensDigit(
+	// 	.x(col % 40),
+	// 	.y(row % 40),
+	// 	.number(number / 10),
+	// 	.background(background),
+	// 	.background_red(background_red),
+	// 	.background_green(background_green),
+	// 	.background_blue(background_blue),
+	// 	.red(number_tens_red),
+	// 	.green(number_tens_green),
+	// 	.blue(number_tens_blue)
+	// );
 
 	wire [3:0] number_ones_red;
 	wire [3:0] number_ones_green;
 	wire [3:0] number_ones_blue;
 
-	VgaNumber vgaNumberOnesDigit(
-		.x(col % 40),
-		.y(row % 40),
-		.number(number % 10),
-		.background(background),
-		.background_red(background_red),
-		.background_green(background_green),
-		.background_blue(background_blue),
-		.red(number_ones_red),
-		.green(number_ones_green),
-		.blue(number_ones_blue)
-	);
+	// VgaNumber vgaNumberOnesDigit(
+	// 	.x(col % 40),
+	// 	.y(row % 40),
+	// 	.number(number % 10),
+	// 	.background(background),
+	// 	.background_red(background_red),
+	// 	.background_green(background_green),
+	// 	.background_blue(background_blue),
+	// 	.red(number_ones_red),
+	// 	.green(number_ones_green),
+	// 	.blue(number_ones_blue)
+	// );
 
 	always @(col, row) begin
 		if (background[row / BLOCK_WIDTH][col/ BLOCK_WIDTH] == GND) begin
@@ -229,13 +229,19 @@ module VgaEnvironmentDrawer
 			green <= coin_green;
 			blue <= coin_blue;
 		end else if (background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CK1) begin
-			red <= number_tens_red;
-			green <= number_tens_green;
-			blue <= number_tens_blue;
+			// red <= number_tens_red;
+			// green <= number_tens_green;
+			// blue <= number_tens_blue;
+			red <= 10;
+			green <= 10;
+			blue <= 3;
 		end else if (background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CK2) begin
-			red <= number_ones_red;
-			green <= number_ones_green;
-			blue <= number_ones_blue;
+			// red <= number_ones_red;
+			// green <= number_ones_green;
+			// blue <= number_ones_blue;
+			red <= 1;
+			green <= 1;
+			blue <= 1;
 		end else begin
 			red <= background_red;
 			green <= background_green;

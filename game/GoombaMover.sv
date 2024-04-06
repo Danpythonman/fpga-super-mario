@@ -16,8 +16,11 @@ module GoombaMover
 	input right,
 	input jump,
 	input byte background [11:0][16:0],
+	input int mario_x,
+	input int mario_y,
 	output int goomba_x,
-	output int goomba_y
+	output int goomba_y,
+	output logic lose
 );
 
 	wire movement_clock;
@@ -44,8 +47,11 @@ module GoombaMover
 		.movement_clock(movement_clock),
 		.background(background),
 		.reset(reset),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
 		.goomba_y(goomba_y),
-		.goomba_x(goomba_x)
+		.goomba_x(goomba_x),
+		.lose(lose)
 	);
 
 
