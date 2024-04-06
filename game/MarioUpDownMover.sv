@@ -5,6 +5,8 @@ module MarioUpDownMover
 	parameter BLK = 2,
 	parameter GND = 3,
     parameter TKN = 4,
+	parameter CK1 = 5,
+	parameter CK2 = 6,
 	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -73,6 +75,10 @@ module MarioUpDownMover
                         || background[mario_top][mario_right] == BLK
                         || background[mario_top][mario_left] == BDR
                         || background[mario_top][mario_right] == BDR
+                        || background[mario_top][mario_left] == CK1
+                        || background[mario_top][mario_right] == CK1
+                        || background[mario_top][mario_left] == CK2
+                        || background[mario_top][mario_right] == CK2
                         || mario_y <= 0)
                     next_state = STATIONARY;
                 else
@@ -85,6 +91,10 @@ module MarioUpDownMover
                         || background[mario_top][mario_right] == BLK
                         || background[mario_top][mario_left] == BDR
                         || background[mario_top][mario_right] == BDR
+                        || background[mario_top][mario_left] == CK1
+                        || background[mario_top][mario_right] == CK1
+                        || background[mario_top][mario_left] == CK2
+                        || background[mario_top][mario_right] == CK2
                         || mario_y <= 0)
                     next_state = STATIONARY;
                 else

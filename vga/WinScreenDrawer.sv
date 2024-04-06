@@ -65,6 +65,7 @@ y (down to up)[0-11]
 	) vgaInterface (
 		.vga_clock(vga_clock),
 		.reset(reset),
+		.number(number),
 		.mario_x(200),
 		.mario_y(200),
 		.goomba_x(1000),

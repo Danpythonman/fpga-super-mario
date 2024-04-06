@@ -5,16 +5,18 @@ module VgaDrawer
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
-	parameter CLK = 5, // clock countdown
+	parameter CK1 = 5, // countdown clock 10s digit
+	parameter CK2 = 6, // countdown clock 1s digit
 	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
 )
 (
-	input             clk,
+	input clk,
 	input      int row,
 	input      int col,
+	input int number,
 	input      int mario_x,
 	input      int mario_y,
 	input int goomba_x,
@@ -49,7 +51,7 @@ module VgaDrawer
 		.blue(mario_blue)
 	);
 
-		VgaGoombaDrawer vgaGoombaDrawer (
+	VgaGoombaDrawer vgaGoombaDrawer (
 		.x(col - goomba_x),
 		.y(row - goomba_y),
 		.background(background),
@@ -67,7 +69,8 @@ module VgaDrawer
 		.BLK(BLK),
 		.GND(GND),
 		.TKN(TKN),
-		.CLK(CLK),
+		.CK1(CK1),
+		.CK2(CK2),
 		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
@@ -76,6 +79,7 @@ module VgaDrawer
 		.clk(clk),
 		.col(col),
 		.row(row),
+		.number(number),
 		.background(background),
 		.red(background_red),
 		.green(background_green),
@@ -111,16 +115,18 @@ module VgaEnvironmentDrawer
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
-	parameter CLK = 5,
+	parameter CK1 = 5, // countdown clock 10s digit
+	parameter CK2 = 6, // countdown clock 1s digit
 	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
 	parameter BLOCK_WIDTH = 40
 )
 (
-	input             clk,
+	input clk,
 	input      int row,
 	input      int col,
+	input int number,
 	input byte background [11:0][16:0],
 	output reg [3:0]  red,
 	output reg [3:0]  green,
@@ -135,10 +141,6 @@ module VgaEnvironmentDrawer
 	wire [3:0] coin_green;
 	wire [3:0] coin_blue;
 
-	wire [3:0] number_red;
-	wire [3:0] number_green;
-	wire [3:0] number_blue;
-
 	VgaCoin vgaCoin(
 		.x(col % 40),
 		.y(row % 40),
@@ -151,29 +153,39 @@ module VgaEnvironmentDrawer
 		.blue(coin_blue)
 	);
 
+	wire [3:0] number_tens_red;
+	wire [3:0] number_tens_green;
+	wire [3:0] number_tens_blue;
+
 	VgaNumber vgaNumberTensDigit(
 		.x(col % 40),
 		.y(row % 40),
+		.number(number / 10),
 		.background(background),
 		.background_red(background_red),
 		.background_green(background_green),
 		.background_blue(background_blue),
-		.red(number_red),
-		.green(number_green),
-		.blue(number_blue)
+		.red(number_tens_red),
+		.green(number_tens_green),
+		.blue(number_tens_blue)
 	);
 
-	// VgaNumber vgaNumberOnesDigit(
-	// 	.x(col % 40),
-	// 	.y(row % 40),
-	// 	.background(background),
-	// 	.background_red(background_red),
-	// 	.background_green(background_green),
-	// 	.background_blue(background_blue),
-	// 	.red(number_red),
-	// 	.green(number_green),
-	// 	.blue(number_blue)
-	// );
+	wire [3:0] number_ones_red;
+	wire [3:0] number_ones_green;
+	wire [3:0] number_ones_blue;
+
+	VgaNumber vgaNumberOnesDigit(
+		.x(col % 40),
+		.y(row % 40),
+		.number(number % 10),
+		.background(background),
+		.background_red(background_red),
+		.background_green(background_green),
+		.background_blue(background_blue),
+		.red(number_ones_red),
+		.green(number_ones_green),
+		.blue(number_ones_blue)
+	);
 
 	always @(col, row) begin
 		if (background[row / BLOCK_WIDTH][col/ BLOCK_WIDTH] == GND) begin
@@ -196,7 +208,11 @@ module VgaEnvironmentDrawer
 				background_red   <= 4'd0;
 				background_green <= 4'd9;
 				background_blue  <= 4'd15;
-		end else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CLK) begin
+		end else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CK1) begin
+				background_red   <= 4'd0;
+				background_green <= 4'd0;
+				background_blue  <= 4'd0;
+		end else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CK2) begin
 				background_red   <= 4'd0;
 				background_green <= 4'd0;
 				background_blue  <= 4'd0;
@@ -208,15 +224,18 @@ module VgaEnvironmentDrawer
 	end
 
 	always @(col, row) begin
-		if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == TKN)begin
+		if (background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == TKN) begin
 			red <= coin_red;
 			green <= coin_green;
 			blue <= coin_blue;
-		end 
-		else if(background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CLK)begin
-			red <= number_red;
-			green <= number_green;
-			blue <= number_blue;
+		end else if (background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CK1) begin
+			red <= number_tens_red;
+			green <= number_tens_green;
+			blue <= number_tens_blue;
+		end else if (background[row / BLOCK_WIDTH][col / BLOCK_WIDTH] == CK2) begin
+			red <= number_ones_red;
+			green <= number_ones_green;
+			blue <= number_ones_blue;
 		end else begin
 			red <= background_red;
 			green <= background_green;
@@ -224,6 +243,4 @@ module VgaEnvironmentDrawer
 		end
 	end
 
-
 endmodule
-

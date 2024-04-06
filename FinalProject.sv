@@ -105,7 +105,8 @@ module FinalProject
 		.vga_blue    (level1_vga_blue),
 		.win(level1_win),
 		.lose(level1_lose),
-		.leds        (level1_leds)
+		// .leds        (level1_leds)
+		.leds        (leds)
 	);
 
 	wire win_vga_clock;
@@ -168,12 +169,8 @@ module FinalProject
 	} state;
 
 	always @(*) begin
-		leds[9] <= start_button;
 		case (state)
 			START: begin
-				leds[0] <= 1;
-				leds[1] <= 0;
-				leds[2] <= 1;
 				start_screen_vga_clock    <= vga_clock;
 				start_screen_reset        <= reset;
 				start_screen_left_switch  <= left_switch;
@@ -200,8 +197,6 @@ module FinalProject
 				vga_blue     <= start_screen_vga_blue;
 			end
 			LEVEL1: begin
-				leds[0] <= 0;
-				leds[1] <= 1;
 				start_screen_vga_clock    <= 0;
 				start_screen_reset        <= 0;
 				start_screen_left_switch  <= 0;
@@ -228,8 +223,6 @@ module FinalProject
 				vga_blue     <= level1_vga_blue;
 			end
 			WIN: begin
-				leds[0] <= 0;
-				leds[1] <= 1;
 				start_screen_vga_clock    <= 0;
 				start_screen_reset        <= 0;
 				start_screen_left_switch  <= 0;
@@ -256,8 +249,6 @@ module FinalProject
 				vga_blue     <= win_vga_blue;
 			end
 			GAME_OVER: begin
-				leds[0] <= 0;
-				leds[1] <= 1;
 				start_screen_vga_clock    <= 0;
 				start_screen_reset        <= 0;
 				start_screen_left_switch  <= 0;

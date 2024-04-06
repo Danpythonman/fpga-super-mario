@@ -18,7 +18,6 @@ module MarioCoin
     input int mario_x,
     input int mario_y,
     output logic touch
-
 );
 
     int mario_left;
@@ -31,17 +30,59 @@ module MarioCoin
 	assign mario_top = (mario_y + 10) / BLOCK_WIDTH;
 	assign mario_bottom = (mario_y - 10 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 
+	enum int unsigned {
+		RESET    = 0,
+		ACTIVE   = 2,
+		TOUCH    = 4,
+        INACTIVE = 8
+	} state;
+
     always @(posedge clk or negedge reset) begin
         if (!reset) begin
             touch <= 0;
         end else begin
-            if (mario_left == x && mario_top == y || mario_left == x && mario_bottom == y 
-                    || mario_right == x && mario_top == y || mario_right == x && mario_bottom == y) begin
-                touch <= 1;
-            end
-            else begin
-                touch <= 0;
-            end
+            case (state)
+                RESET: begin
+                    touch <= 0;
+                end
+                ACTIVE: begin
+                    touch <= 0;
+                end
+                TOUCH: begin
+                    touch <= 1;
+                end
+                INACTIVE: begin
+                    touch <= 0;
+                end
+            endcase
+        end
+    end
+
+    always @(posedge clk or negedge reset) begin
+        if (!reset) begin
+            state <= RESET;
+        end else begin
+            case (state)
+                RESET: begin
+                    state <= ACTIVE;
+                end
+                ACTIVE: begin
+                    if (mario_left == x && mario_top == y
+                            || mario_left == x && mario_bottom == y 
+                            || mario_right == x && mario_top == y
+                            || mario_right == x && mario_bottom == y) begin
+                        state <= TOUCH;
+                    end else begin
+                        state <= ACTIVE;
+                    end
+                end
+                TOUCH: begin
+                    state <= INACTIVE;
+                end
+                INACTIVE: begin
+                    state <= INACTIVE;
+                end
+            endcase
         end
     end
 

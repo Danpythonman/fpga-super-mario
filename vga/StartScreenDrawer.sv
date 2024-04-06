@@ -30,26 +30,26 @@ module StartScreenDrawer
 	logic [2:0] touch;
 
 	byte background [11:0][16:0] = '{
-	'{ BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR},
-	'{ BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, SKY, BDR, SKY, BDR, SKY, SKY, BDR, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR},
+		'{ BDR, BDR, SKY, SKY, BDR, BDR, SKY, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, SKY, BDR, BDR, SKY, BDR, SKY, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, SKY, BDR, BDR, SKY, BDR, BDR, SKY, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
 
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, SKY, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, SKY, SKY, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, SKY, SKY, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, BDR, SKY, SKY, BDR, BDR, SKY, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, BDR, BDR, BDR, BDR, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, SKY, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, BDR, SKY, BDR, BDR, SKY, SKY, SKY, SKY, SKY, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
 
-	'{ BDR, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR},
-	'{ BDR, SKY, SKY, SKY, BDR, BDR, SKY, BDR, SKY, BDR, BDR, SKY, SKY, BDR, SKY, SKY, BDR},
-	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
-	'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR}
-};
+		'{ BDR, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, BDR, SKY, BDR, SKY, BDR},
+		'{ BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, SKY, BDR, BDR, SKY, SKY, BDR, SKY, SKY, BDR},
+		'{ BDR, SKY, SKY, SKY, BDR, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
+		'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR}
+	};
 
-/*
-x (right to left)[0-16]
-y (down to up)[0-11]
-*/
+	/*
+	x (right to left)[0-16]
+	y (down to up)[0-11]
+	*/
 
 	VgaInterface
 	#(
@@ -65,6 +65,7 @@ y (down to up)[0-11]
 	) vgaInterface (
 		.vga_clock(vga_clock),
 		.reset(reset),
+		.number(0),
 		.mario_x(200),
 		.mario_y(200),
 		.background(background),
