@@ -25,9 +25,17 @@ module FinalProjectGameLogic
 	output int goomba_x,
 	output int goomba_y,
 	output int seconds,
+	output int lives,
 	output [9:0] leds
 );
 
+	LivesCounter livesCounter
+	(
+		.vga_clock(vga_clock),
+		.reset(reset),
+		.kill(level1_lose || level2_lose || level3_lose),
+		.lives(lives)
+	);
 	wire start_screen_vga_clock;
 	wire start_screen_reset;
 	wire start_screen_left_switch;
@@ -59,6 +67,39 @@ module FinalProjectGameLogic
 		.win          (start_screen_win),
 		.lose         (start_screen_lose),
 		.leds         (start_screen_leds)
+	);
+
+	wire prelevel1_vga_clock;
+	wire prelevel1_reset;
+	wire prelevel1_left_switch;
+	wire prelevel1_right_switch;
+	wire prelevel1_jump_button;
+	byte prelevel1_background [11:0][16:0];
+	int prelevel1_mario_x;
+	int prelevel1_mario_y;
+	int prelevel1_goomba_x;
+	int prelevel1_goomba_y;
+	int prelevel1_seconds;
+	wire prelevel1_win;
+	wire prelevel1_lose;
+	wire [9:0] prelevel1_leds;
+
+	PreLevel1 prelevel1
+	(
+		.vga_clock    (prelevel1_vga_clock),
+		.reset        (prelevel1_reset),
+		.left_switch  (prelevel1_left_switch),
+		.right_switch (prelevel1_right_switch),
+		.jump_button  (prelevel1_jump_button),
+		.background   (prelevel1_background),
+		.mario_x      (prelevel1_mario_x),
+		.mario_y      (prelevel1_mario_y),
+		.goomba_x     (prelevel1_goomba_x),
+		.goomba_y     (prelevel1_goomba_y),
+		.seconds      (prelevel1_seconds),
+		.win          (prelevel1_win),
+		.lose         (prelevel1_lose),
+		.leds         (prelevel1_leds)
 	);
 
 	wire level1_vga_clock;
@@ -228,11 +269,12 @@ module FinalProjectGameLogic
 
 	enum int unsigned {
 		START     = 0,
-		LEVEL1    = 2,
-		LEVEL2    = 4,
-		LEVEL3    = 8,
-		WIN       = 16,
-		GAME_OVER = 32
+		PRELEVEL1 = 2,
+		LEVEL1    = 4,
+		LEVEL2    = 8,
+		LEVEL3    = 16,
+		WIN       = 32,
+		GAME_OVER = 64
 	} state;
 
 	always @(*) begin
@@ -241,6 +283,12 @@ module FinalProjectGameLogic
 		start_screen_left_switch  = 0;
 		start_screen_right_switch = 0;
 		start_screen_jump_button  = 0;
+
+		prelevel1_vga_clock    = vga_clock;
+		prelevel1_reset        = 0;
+		prelevel1_left_switch  = 0;
+		prelevel1_right_switch = 0;
+		prelevel1_jump_button  = 0;
 
 		level1_vga_clock    = vga_clock;
 		level1_reset        = 0;
@@ -287,9 +335,23 @@ module FinalProjectGameLogic
 				goomba_y   = start_screen_goomba_y;
 				seconds    = start_screen_seconds;
 			end
+			PRELEVEL1: begin
+				prelevel1_vga_clock    = vga_clock;
+				prelevel1_reset        = reset;
+				prelevel1_left_switch  = left_switch;
+				prelevel1_right_switch = right_switch;
+				prelevel1_jump_button  = jump_button;
+
+				background = prelevel1_background;
+				mario_x    = prelevel1_mario_x;
+				mario_y    = prelevel1_mario_y;
+				goomba_x   = prelevel1_goomba_x;
+				goomba_y   = prelevel1_goomba_y;
+				seconds    = prelevel1_seconds;
+			end
 			LEVEL1: begin
 				level1_vga_clock    = vga_clock;
-				level1_reset        = reset;
+				level1_reset        = reset || level1_lose;
 				level1_left_switch  = left_switch;
 				level1_right_switch = right_switch;
 				level1_jump_button  = jump_button;
@@ -303,7 +365,7 @@ module FinalProjectGameLogic
 			end
 			LEVEL2: begin
 				level2_vga_clock    = vga_clock;
-				level2_reset        = reset;
+				level2_reset        = reset || level2_lose;
 				level2_left_switch  = left_switch;
 				level2_right_switch = right_switch;
 				level2_jump_button  = jump_button;
@@ -317,7 +379,7 @@ module FinalProjectGameLogic
 			end
 			LEVEL3: begin
 				level3_vga_clock    = vga_clock;
-				level3_reset        = reset;
+				level3_reset        = reset || level3_lose;
 				level3_left_switch  = left_switch;
 				level3_right_switch = right_switch;
 				level3_jump_button  = jump_button;
@@ -371,10 +433,20 @@ module FinalProjectGameLogic
 					else
 						state <= START;
 				end
+				PRELEVEL1: begin
+					if (lives <= 0)
+						state <= GAME_OVER;
+					else if (!start_button)
+						state <= LEVEL1;
+					else
+						state <= PRELEVEL1;
+				end
 				LEVEL1: begin
 					if (level1_win)
 						state <= LEVEL2;
 					else if (level1_lose)
+						state <= PRELEVEL1;
+					else if (lives <= 0)
 						state <= GAME_OVER;
 					else
 						state <= LEVEL1;
@@ -383,6 +455,8 @@ module FinalProjectGameLogic
 					if (level2_win)
 						state <= LEVEL3;
 					else if (level2_lose)
+						state <= PRELEVEL1;
+					else if (lives <= 0)
 						state <= GAME_OVER;
 					else
 						state <= LEVEL2;
@@ -391,6 +465,8 @@ module FinalProjectGameLogic
 					if (level3_win)
 						state <= WIN;
 					else if (level3_lose)
+						state <= PRELEVEL1;
+					else if (lives <= 0)
 						state <= GAME_OVER;
 					else
 						state <= LEVEL3;
@@ -404,5 +480,10 @@ module FinalProjectGameLogic
 			endcase
 		end
 	end
+
+	assign leds[9] = lives == 3;
+	assign leds[8] = lives == 2;
+	assign leds[7] = lives == 1;
+	assign leds[6] = lives == 0;
 
 endmodule

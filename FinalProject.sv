@@ -52,6 +52,7 @@ module FinalProject
 	int mario_y;
 	int goomba_x;
 	int goomba_y;
+	int lives;
 	int seconds;
 
 	FinalProjectGameLogic #(
@@ -78,7 +79,9 @@ module FinalProject
 		.mario_y(mario_y),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
-		.seconds(seconds)
+		.seconds(seconds),
+		.lives(lives),
+		.leds(leds)
 	);
 
 	FinalProjectVgaLogic #(
@@ -108,7 +111,8 @@ module FinalProject
 		.vga_red(vga_red),
 		.vga_green(vga_green),
 		.vga_blue(vga_blue),
-		.leds(leds)
+		.lives(lives)
+		// .leds(leds)
 	);
 
 endmodule

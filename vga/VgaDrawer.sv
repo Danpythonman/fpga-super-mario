@@ -17,6 +17,7 @@ module VgaDrawer
 	input      int row,
 	input      int col,
 	input int number,
+	input int lives,
 	input      int mario_x,
 	input      int mario_y,
 	input int goomba_x,
@@ -80,6 +81,7 @@ module VgaDrawer
 		.col(col),
 		.row(row),
 		.number(number),
+		.lives(lives),
 		.background(background),
 		.red(background_red),
 		.green(background_green),
@@ -127,6 +129,7 @@ module VgaEnvironmentDrawer
 	input      int row,
 	input      int col,
 	input int number,
+	input int lives,
 	input byte background [11:0][16:0],
 	output reg [3:0]  red,
 	output reg [3:0]  green,
@@ -151,6 +154,22 @@ module VgaEnvironmentDrawer
 		.red(coin_red),
 		.green(coin_green),
 		.blue(coin_blue)
+	);
+
+	wire [3:0] heart_red;
+	wire [3:0] heart_green;
+	wire [3:0] heart_blue;
+
+	VgaHeartDrawer vgaHeartDrawer(
+		.x(col % 40),
+		.y(row % 40),
+		.background(background),
+		.background_red(background_red),
+		.background_green(background_green),
+		.background_blue(background_blue),
+		.red(heart_red),
+		.green(heart_green),
+		.blue(heart_blue)
 	);
 
 	wire [3:0] number_tens_red;
@@ -242,6 +261,21 @@ module VgaEnvironmentDrawer
 			red <= 1;
 			green <= 1;
 			blue <= 1;
+		end
+		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 2 && lives == 3) begin
+			red <= heart_red;
+			green <= heart_green;
+			blue <= heart_blue;
+		end
+		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 1 && lives >= 2) begin
+			red <= heart_red;
+			green <= heart_green;
+			blue <= heart_blue;
+		end
+		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 0 && lives >= 1) begin
+			red <= heart_red;
+			green <= heart_green;
+			blue <= heart_blue;
 		end else begin
 			red <= background_red;
 			green <= background_green;
