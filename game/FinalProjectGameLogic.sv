@@ -208,6 +208,39 @@ module FinalProjectGameLogic
 		.leds         (level3_leds)
 	);
 
+	wire level_finish_vga_clock;
+	wire level_finish_reset;
+	wire level_finish_left_switch;
+	wire level_finish_right_switch;
+	wire level_finish_jump_button;
+	byte level_finish_background [11:0][16:0];
+	int level_finish_mario_x;
+	int level_finish_mario_y;
+	int level_finish_seconds;
+	wire level_finish_win;
+	wire level_finish_lose;
+	wire [9:0] level_finish_leds;
+
+	LevelFinish level_finish
+	(
+		.vga_clock    (level_finish_vga_clock),
+		.reset        (level_finish_reset),
+		.left_switch  (level_finish_left_switch),
+		.right_switch (level_finish_right_switch),
+		.jump_button  (level_finish_jump_button),
+		.background   (level_finish_background),
+		.mario_x      (level_finish_mario_x),
+		.mario_y      (level_finish_mario_y),
+		.goomba_x     (level_finish_goomba_x),
+		.goomba_y     (level_finish_goomba_y),
+		.goomba_2x     (level_finish_goomba_2x),
+		.goomba_2y     (level_finish_goomba_2y),
+		.seconds      (level_finish_seconds),
+		.win          (level_finish_win),
+		.lose         (level_finish_lose),
+		.leds         (level_finish_leds)
+	);
+
 	wire win_screen_vga_clock;
 	wire win_screen_reset;
 	wire win_screen_left_switch;
@@ -280,8 +313,9 @@ module FinalProjectGameLogic
 		LEVEL1    = 4,
 		LEVEL2    = 8,
 		LEVEL3    = 16,
-		WIN       = 32,
-		GAME_OVER = 64
+		LEVEL_FINISH = 32,
+		WIN       = 64,
+		GAME_OVER = 128
 	} state;
 
 	always @(*) begin
@@ -314,6 +348,12 @@ module FinalProjectGameLogic
 		level3_left_switch  = 0;
 		level3_right_switch = 0;
 		level3_jump_button  = 0;
+
+		level_finish_vga_clock    = vga_clock;
+		level_finish_reset        = 0;
+		level_finish_left_switch  = 0;
+		level_finish_right_switch = 0;
+		level_finish_jump_button  = 0;
 
 		win_screen_vga_clock    = vga_clock;
 		win_screen_reset        = 0;
@@ -413,6 +453,23 @@ module FinalProjectGameLogic
 				show_hearts = 1;
 				seconds    = level3_seconds;
 			end
+			LEVEL_FINISH: begin
+				level_finish_vga_clock    = vga_clock;
+				level_finish_reset        = reset;
+				level_finish_left_switch  = left_switch;
+				level_finish_right_switch = right_switch;
+				level_finish_jump_button  = jump_button;
+
+				background = level_finish_background;
+				mario_x    = level_finish_mario_x;
+				mario_y    = level_finish_mario_y;
+				goomba_x   = 1000;
+				goomba_y   = 1000;
+				goomba_2x   = 1000;
+				goomba_2y   = 1000;
+				show_hearts = 1;
+				seconds    = level3_seconds;
+			end
 			WIN: begin
 				win_screen_vga_clock    = vga_clock;
 				win_screen_reset        = reset;
@@ -491,13 +548,19 @@ module FinalProjectGameLogic
 				end
 				LEVEL3: begin
 					if (level3_win)
-						state <= WIN;
+						state <= LEVEL_FINISH;
 					else if (level3_lose)
 						state <= PRELEVEL1;
 					else if (lives <= 0)
 						state <= GAME_OVER;
 					else
 						state <= LEVEL3;
+				end
+				LEVEL_FINISH: begin
+					if (level_finish_win)
+						state <= WIN;
+					else
+						state <= LEVEL_FINISH;
 				end
 				WIN: begin
 					state <= WIN;
