@@ -20,7 +20,7 @@ module GoombaMover
 	input int mario_y,
 	output int goomba_x,
 	output int goomba_y,
-	output logic lose
+	output lose
 );
 
 	wire movement_clock;
@@ -32,6 +32,9 @@ module GoombaMover
 	);
 
 	assign goomba_y = 360;
+
+	wire mario_hit_goomba;
+	assign lose = mario_hit_goomba;
 
 	GoombaLeftRightMover
 	#(
@@ -51,8 +54,7 @@ module GoombaMover
 		.mario_y(mario_y),
 		.goomba_y(goomba_y),
 		.goomba_x(goomba_x),
-		.lose(lose)
+		.lose(mario_hit_goomba)
 	);
-
 
 endmodule

@@ -26,8 +26,8 @@ module GoombaLeftRightMover
 	int goomba_top;
 	int goomba_bottom;
 
-	assign goomba_left = (previous_goomba_x - 1) / BLOCK_WIDTH;
-	assign goomba_right = (previous_goomba_x + 1 + CHARACTER_WIDTH) / BLOCK_WIDTH;
+	assign goomba_left = (goomba_x - 1) / BLOCK_WIDTH;
+	assign goomba_right = (goomba_x + 1 + CHARACTER_WIDTH) / BLOCK_WIDTH;
 	assign goomba_top = goomba_y / BLOCK_WIDTH;
 	assign goomba_bottom = (goomba_y + CHARACTER_WIDTH - 1) / BLOCK_WIDTH;
 
@@ -36,48 +36,63 @@ module GoombaLeftRightMover
 	 */
 	enum int unsigned {
 		RESET = 0,
-		LEFT  = 4,
-		RIGHT = 8,
+		LEFT  = 2,
+		RIGHT = 4,
+		KILL  = 8,
 		LOSE  = 16
 	} state, next_state;
 
 	/*
 	 * Deciding next state.
 	 */
-	always_ff@(posedge movement_clock) begin
-		next_state = RESET;
-		case(state)
-			RESET: begin
-				next_state = RIGHT;
-			end
-			LEFT: begin
-				if (mario_x + CHARACTER_WIDTH >= goomba_x
-					&& mario_x <= goomba_x + CHARACTER_WIDTH
-					&& mario_y + CHARACTER_WIDTH >= goomba_y)
-					next_state = LOSE;
-				else if (background[goomba_top][goomba_left] == BLK 
-						|| background[goomba_bottom][goomba_left] == BLK
-						|| goomba_x <= 0)
-					next_state = RIGHT;
-				else
-					next_state = LEFT;
-			end
-			RIGHT: begin
-				if (mario_x + CHARACTER_WIDTH >= goomba_x
-					&& mario_x <= goomba_x + CHARACTER_WIDTH
-					&& mario_y + CHARACTER_WIDTH >= goomba_y)
-					next_state = LOSE;
-				else if (background[goomba_top][goomba_right] == BLK 
-						|| background[goomba_bottom][goomba_right] == BLK 
-						|| goomba_x + CHARACTER_WIDTH >= SCREEN_WIDTH)
-					next_state = LEFT;
-				else
-					next_state = RIGHT;
-			end
-			LOSE: begin
-				next_state = LOSE;
-			end
-		endcase
+	always_ff@(posedge movement_clock or negedge reset) begin
+		if (!reset) begin
+			state <= RESET;
+		end else begin
+			case(state)
+				RESET: begin
+					state <= RIGHT;
+				end
+				LEFT: begin
+					if (mario_x + CHARACTER_WIDTH >= goomba_x
+							&& mario_x <= goomba_x + CHARACTER_WIDTH
+							&& mario_y + CHARACTER_WIDTH == goomba_y)
+						state <= KILL;
+					else if (mario_x + CHARACTER_WIDTH >= goomba_x
+							&& mario_x <= goomba_x + CHARACTER_WIDTH
+							&& mario_y + CHARACTER_WIDTH >= goomba_y)
+						state <= LOSE;
+					else if (background[goomba_top][goomba_left] == BLK 
+							|| background[goomba_bottom][goomba_left] == BLK
+							|| goomba_x <= 0)
+						state <= RIGHT;
+					else
+						state <= LEFT;
+				end
+				RIGHT: begin
+					if (mario_x + CHARACTER_WIDTH >= goomba_x
+							&& mario_x <= goomba_x + CHARACTER_WIDTH
+							&& mario_y + CHARACTER_WIDTH == goomba_y)
+						state <= KILL;
+					else if  (mario_x + CHARACTER_WIDTH >= goomba_x
+							&& mario_x <= goomba_x + CHARACTER_WIDTH
+							&& mario_y + CHARACTER_WIDTH >= goomba_y)
+						state <= LOSE;
+					else if (background[goomba_top][goomba_right] == BLK 
+							|| background[goomba_bottom][goomba_right] == BLK 
+							|| goomba_x + CHARACTER_WIDTH >= SCREEN_WIDTH)
+						state <= LEFT;
+					else
+						state <= RIGHT;
+				end
+				KILL: begin
+					state <= KILL;
+				end
+				LOSE: begin
+					state <= LOSE;
+				end
+			endcase
+		end
 	end
 
 	/*
@@ -92,11 +107,15 @@ module GoombaLeftRightMover
 			end
 			LEFT: begin
 				lose <= 0;
-				goomba_x <= previous_goomba_x - 1;
+				goomba_x <= goomba_x - 1;
 			end
 			RIGHT: begin
 				lose <= 0;
-				goomba_x <= previous_goomba_x + 1;
+				goomba_x <= goomba_x + 1;
+			end
+			KILL: begin
+				lose <= 0;
+				goomba_x <= 1000; // put goomba off screen
 			end
 			LOSE: begin
 				lose <= 1;
@@ -105,25 +124,25 @@ module GoombaLeftRightMover
 		endcase
 	end
 
-	always_ff@(posedge movement_clock or negedge reset) begin
-		if (!reset)
-			previous_goomba_x <= 100;
-		else begin
-			if (state == RESET)
-				previous_goomba_x <= 100;
-			else
-				previous_goomba_x <= goomba_x;
-		end
-	end
+	// always_ff@(posedge movement_clock or negedge reset) begin
+	// 	if (!reset)
+	// 		previous_goomba_x <= 300;
+	// 	else begin
+	// 		if (state == RESET)
+	// 			previous_goomba_x <= 300;
+	// 		else
+	// 			previous_goomba_x <= goomba_x;
+	// 	end
+	// end
 
 	/*
-	 * Net state transition.
+	 * Next state transition.
 	 */
-	always_ff@(posedge movement_clock or negedge reset) begin
-		if(~reset)
-			state <= RIGHT;
-		else
-			state <= next_state;
-	end
+	// always_ff@(posedge movement_clock or negedge reset) begin
+	// 	if(~reset)
+	// 		state <= RESET;
+	// 	else
+	// 		state <= next_state;
+	// end
 
 endmodule

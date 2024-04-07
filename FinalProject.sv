@@ -140,6 +140,37 @@ module FinalProject
 		.leds        (level2_leds)
 	);
 
+	wire level3_vga_clock;
+	wire level3_reset;
+	wire level3_left_switch;
+	wire level3_right_switch;
+	wire level3_jump_button;
+	wire [3:0] level3_vga_red;
+	wire [3:0] level3_vga_green;
+	wire [3:0] level3_vga_blue;
+	wire [9:0] level3_leds;
+	wire level3_win;
+	wire level3_lose;
+
+	Level3 level3
+	(
+		.vga_clock   (level3_vga_clock),
+		.reset       (level3_reset),
+		.left_switch (level3_left_switch),
+		.right_switch(level3_right_switch),
+		.jump_button (level3_jump_button),
+		.row(row),
+		.column(column),
+		.display_enable(display_enable),
+		.vga_red     (level3_vga_red),
+		.vga_green   (level3_vga_green),
+		.vga_blue    (level3_vga_blue),
+		.win(level3_win),
+		.lose(level3_lose),
+		// .leds        (level1_leds)
+		.leds        (level3_leds)
+	);
+
 	wire win_vga_clock;
 	wire win_reset;
 	wire win_left_switch;
@@ -196,8 +227,9 @@ module FinalProject
 		START     = 0,
 		LEVEL1    = 2,
 		LEVEL2    = 4,
-		WIN       = 8,
-		GAME_OVER = 16
+		LEVEL3    = 8,
+		WIN       = 16,
+		GAME_OVER = 32
 	} state;
 
 	always @(*) begin
@@ -208,16 +240,21 @@ module FinalProject
 				start_screen_left_switch  <= left_switch;
 				start_screen_right_switch <= right_switch;
 				start_screen_jump_button  <= jump_button;
-				level1_vga_clock    <= 0;
+				level1_vga_clock    <= vga_clock;
 				level1_reset        <= 0;
 				level1_left_switch  <= 0;
 				level1_right_switch <= 0;
 				level1_jump_button  <= 0;
-				level2_vga_clock    <= 0;
+				level2_vga_clock    <= vga_clock;
 				level2_reset        <= 0;
 				level2_left_switch  <= 0;
 				level2_right_switch <= 0;
 				level2_jump_button  <= 0;
+				level3_vga_clock    <= vga_clock;
+				level3_reset        <= 0;
+				level3_left_switch  <= 0;
+				level3_right_switch <= 0;
+				level3_jump_button  <= 0;
 				win_vga_clock    <= 0;
 				win_reset        <= 0;
 				win_left_switch  <= 0;
@@ -244,11 +281,16 @@ module FinalProject
 				level1_left_switch  <= left_switch;
 				level1_right_switch <= right_switch;
 				level1_jump_button  <= jump_button;
-				level2_vga_clock    <= 0;
+				level2_vga_clock    <= vga_clock;
 				level2_reset        <= 0;
 				level2_left_switch  <= 0;
 				level2_right_switch <= 0;
 				level2_jump_button  <= 0;
+				level3_vga_clock    <= vga_clock;
+				level3_reset        <= 0;
+				level3_left_switch  <= 0;
+				level3_right_switch <= 0;
+				level3_jump_button  <= 0;
 				win_vga_clock    <= 0;
 				win_reset        <= 0;
 				win_left_switch  <= 0;
@@ -270,7 +312,7 @@ module FinalProject
 				start_screen_left_switch  <= 0;
 				start_screen_right_switch <= 0;
 				start_screen_jump_button  <= 0;
-				level1_vga_clock    <= 0;
+				level1_vga_clock    <= vga_clock;
 				level1_reset        <= 0;
 				level1_left_switch  <= 0;
 				level1_right_switch <= 0;
@@ -280,6 +322,11 @@ module FinalProject
 				level2_left_switch  <= left_switch;
 				level2_right_switch <= right_switch;
 				level2_jump_button  <= jump_button;
+				level3_vga_clock    <= vga_clock;
+				level3_reset        <= 0;
+				level3_left_switch  <= 0;
+				level3_right_switch <= 0;
+				level3_jump_button  <= 0;
 				win_vga_clock    <= 0;
 				win_reset        <= 0;
 				win_left_switch  <= 0;
@@ -291,9 +338,45 @@ module FinalProject
 				game_over_right_switch <= 0;
 				game_over_jump_button  <= 0;
 
-				vga_red      <= level1_vga_red;
-				vga_green    <= level1_vga_green;
-				vga_blue     <= level1_vga_blue;
+				vga_red      <= level2_vga_red;
+				vga_green    <= level2_vga_green;
+				vga_blue     <= level2_vga_blue;
+			end
+			LEVEL3: begin
+				start_screen_vga_clock    <= 0;
+				start_screen_reset        <= 0;
+				start_screen_left_switch  <= 0;
+				start_screen_right_switch <= 0;
+				start_screen_jump_button  <= 0;
+				level1_vga_clock    <= vga_clock;
+				level1_reset        <= 0;
+				level1_left_switch  <= 0;
+				level1_right_switch <= 0;
+				level1_jump_button  <= 0;
+				level2_vga_clock    <= vga_clock;
+				level2_reset        <= 0;
+				level2_left_switch  <= 0;
+				level2_right_switch <= 0;
+				level2_jump_button  <= 0;
+				level3_vga_clock    <= vga_clock;
+				level3_reset        <= reset;
+				level3_left_switch  <= left_switch;
+				level3_right_switch <= right_switch;
+				level3_jump_button  <= jump_button;
+				win_vga_clock    <= 0;
+				win_reset        <= 0;
+				win_left_switch  <= 0;
+				win_right_switch <= 0;
+				win_jump_button  <= 0;
+				game_over_vga_clock    <= 0;
+				game_over_reset        <= 0;
+				game_over_left_switch  <= 0;
+				game_over_right_switch <= 0;
+				game_over_jump_button  <= 0;
+
+				vga_red      <= level3_vga_red;
+				vga_green    <= level3_vga_green;
+				vga_blue     <= level3_vga_blue;
 			end
 			WIN: begin
 				start_screen_vga_clock    <= 0;
@@ -301,16 +384,21 @@ module FinalProject
 				start_screen_left_switch  <= 0;
 				start_screen_right_switch <= 0;
 				start_screen_jump_button  <= 0;
-				level1_vga_clock    <= 0;
+				level1_vga_clock    <= vga_clock;
 				level1_reset        <= 0;
 				level1_left_switch  <= 0;
 				level1_right_switch <= 0;
 				level1_jump_button  <= 0;
-				level2_vga_clock    <= 0;
+				level2_vga_clock    <= vga_clock;
 				level2_reset        <= 0;
 				level2_left_switch  <= 0;
 				level2_right_switch <= 0;
 				level2_jump_button  <= 0;
+				level3_vga_clock    <= vga_clock;
+				level3_reset        <= 0;
+				level3_left_switch  <= 0;
+				level3_right_switch <= 0;
+				level3_jump_button  <= 0;
 				win_vga_clock    <= vga_clock;
 				win_reset        <= reset;
 				win_left_switch  <= left_switch;
@@ -332,16 +420,21 @@ module FinalProject
 				start_screen_left_switch  <= 0;
 				start_screen_right_switch <= 0;
 				start_screen_jump_button  <= 0;
-				level1_vga_clock    <= 0;
+				level1_vga_clock    <= vga_clock;
 				level1_reset        <= 0;
 				level1_left_switch  <= 0;
 				level1_right_switch <= 0;
 				level1_jump_button  <= 0;
-				level2_vga_clock    <= 0;
+				level2_vga_clock    <= vga_clock;
 				level2_reset        <= 0;
 				level2_left_switch  <= 0;
 				level2_right_switch <= 0;
 				level2_jump_button  <= 0;
+				level3_vga_clock    <= vga_clock;
+				level3_reset        <= 0;
+				level3_left_switch  <= 0;
+				level3_right_switch <= 0;
+				level3_jump_button  <= 0;
 				win_vga_clock    <= 0;
 				win_reset        <= 0;
 				win_left_switch  <= 0;
@@ -381,11 +474,19 @@ module FinalProject
 				end
 				LEVEL2: begin
 					if (level2_win)
-						state <= WIN;
+						state <= LEVEL3;
 					else if (level2_lose)
 						state <= GAME_OVER;
 					else
 						state <= LEVEL2;
+				end
+				LEVEL3: begin
+					if (level3_win)
+						state <= WIN;
+					else if (level3_lose)
+						state <= GAME_OVER;
+					else
+						state <= LEVEL3;
 				end
 				WIN: begin
 					state <= WIN;

@@ -1,4 +1,4 @@
-module Level2
+module Level3
 #(
 	parameter BDR = 0,
 	parameter SKY = 1,
@@ -36,16 +36,16 @@ module Level2
 	byte background [11:0][16:0] = '{
 		'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
 		'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
-		'{ SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-		'{ SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, SKY, SKY, SKY },
-		'{ SKY, BLK, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-
+		'{ SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, TKN, SKY, SKY }, // [2][5]
-		'{ BLK, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
-		'{ SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+		'{ SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 
-		'{ SKY, TKN, SKY, BLK, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, // [15][2],[9][2]
+		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY },
+		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+		'{ SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY },
+		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+
+		'{ SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 		'{ BDR, CK2, CK1, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
 	};
@@ -57,7 +57,7 @@ module Level2
 
 	int goomba_x;
 	int goomba_y;
-	int number_of_coins = 3;
+	int number_of_coins = 2;
 
 	int seconds;
 	wire seconds_done;
@@ -165,8 +165,8 @@ module Level2
 	) marioCoin1 (
 		.clk(vga_clock),
 		.reset(reset),
-		.x(2),
-		.y(5),
+		.x(6),
+		.y(6),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
 		.touch(touch[0])
@@ -186,50 +186,24 @@ module Level2
 	) marioCoin2 (
 		.clk(vga_clock),
 		.reset(reset),
-		.x(15),
+		.x(14),
 		.y(2),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
 		.touch(touch[1])
 	);
 
-		MarioCoin
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioCoin3 (
-		.clk(vga_clock),
-		.reset(reset),
-		.x(9),
-		.y(2),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.touch(touch[2])
-	);
-
 	always@(posedge vga_clock or negedge reset) begin
 		if (!reset) begin
-			number_of_coins <= 3;
-			background [5][2] <= TKN;
-			background [2][15] <= TKN;
-			background [2][9] <= TKN;
-
+			number_of_coins <= 2;
+			background [6][6] <= TKN;
+			background [2][14] <= TKN;
 		end else begin
 			if (touch[0]) begin
-				background [5][2] <= SKY; // [y][x]
+				background [6][6] <= SKY; // [y][x]
 				number_of_coins <= number_of_coins - 1;
 			end else if(touch[1])begin
-				background [2][15] <= SKY; // [y][x]
-				number_of_coins <= number_of_coins - 1;
-			end else if(touch[2])begin
-				background [2][9] <= SKY; // [y][x]
+				background [2][14] <= SKY; // [y][x]
 				number_of_coins <= number_of_coins - 1;
 			end
 		end
