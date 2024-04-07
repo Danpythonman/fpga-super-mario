@@ -18,48 +18,17 @@ module Level2
 	input left_switch,
 	input right_switch,
 	input jump_button,
-	input int row,
-	input int column,
-	input display_enable,
-	output [3:0] vga_red,
-	output [3:0] vga_green,
-	output [3:0] vga_blue,
+	output byte background [11:0][16:0],
+	output int mario_x,
+	output int mario_y,
+	output int goomba_x,
+	output int goomba_y,
+	output int seconds,
 	output win,
 	output lose,
 	output [9:0] leds
 );
 
-	int mario_x;
-	int mario_y;
-	logic [2:0] touch;
-
-	byte background [11:0][16:0] = '{
-		'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
-		'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
-		'{ SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-		'{ SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, SKY, SKY, SKY },
-		'{ SKY, BLK, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-
-		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, TKN, SKY, SKY }, // [2][5]
-		'{ BLK, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
-		'{ SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-
-		'{ SKY, TKN, SKY, BLK, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, // [15][2],[9][2]
-		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-		'{ BDR, CK2, CK1, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
-	};
-
-	/* TOP LEFT (of screen) IS BOTTOM RIGHT (of array)
-	x (right to left)[0-16]
-	y (down to up)[0-11]
-	*/
-
-	int goomba_x;
-	int goomba_y;
-	int number_of_coins = 3;
-
-	int seconds;
 	wire seconds_done;
 
 	SecondsCounter secondsCounter
@@ -70,6 +39,11 @@ module Level2
 		.done(seconds_done),
 		.leds(leds)
 	);
+
+	/* TOP LEFT (of screen) IS BOTTOM RIGHT (of array)
+	x (right to left)[0-16]
+	y (down to up)[0-11]
+	*/
 
 	MarioMover
 	#(
@@ -121,35 +95,7 @@ module Level2
 		.lose(mario_hit_goomba)
 	);
 
-	VgaInterface
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CK1(CK1),
-		.CK2(CK2),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) vgaInterface (
-		.vga_clock(vga_clock),
-		.reset(reset),
-		.number(seconds),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.goomba_x(goomba_x),
-		.goomba_y(goomba_y),
-		.background(background),
-		.row(row),
-		.column(column),
-		.display_enable(display_enable),
-		.vga_red(vga_red),
-		.vga_green(vga_green),
-		.vga_blue(vga_blue)
-	);
+	logic [2:0] touch;
 
 	MarioCoin
 	#(
@@ -193,7 +139,7 @@ module Level2
 		.touch(touch[1])
 	);
 
-		MarioCoin
+	MarioCoin
 	#(
 		.BDR(BDR),
 		.SKY(SKY),
@@ -214,12 +160,30 @@ module Level2
 		.touch(touch[2])
 	);
 
+	int number_of_coins;
+
 	always@(posedge vga_clock or negedge reset) begin
 		if (!reset) begin
 			number_of_coins <= 3;
-			background [5][2] <= TKN;
-			background [2][15] <= TKN;
-			background [2][9] <= TKN;
+			background <= '{
+				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
+				'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
+				'{ SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				'{ SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, SKY, SKY, SKY },
+				'{ SKY, BLK, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+
+				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, TKN, SKY, SKY }, // [2][5]
+				'{ BLK, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
+				'{ SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+
+				'{ SKY, TKN, SKY, BLK, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, // [15][2],[9][2]
+				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				'{ BDR, CK2, CK1, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
+			};
+			// background [5][2] <= TKN;
+			// background [2][15] <= TKN;
+			// background [2][9] <= TKN;
 
 		end else begin
 			if (touch[0]) begin
@@ -236,6 +200,6 @@ module Level2
 	end
 
 	assign win = number_of_coins == 0;
-	assign lose = seconds_done || mario_hit_goomba;
+	assign lose = mario_hit_goomba || seconds_done;
 
 endmodule

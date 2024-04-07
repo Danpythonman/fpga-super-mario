@@ -23,11 +23,23 @@ module VgaInterface
 	input byte background [11:0][16:0],
 	input int row,
 	input int column,
-	input wire display_enable,
+	input display_enable,
 	output reg [3:0] vga_red,
 	output reg [3:0] vga_green,
-	output reg [3:0] vga_blue
+	output reg [3:0] vga_blue,
+	output reg [9:0] leds
 );
+
+	reg [31:0] count = 0;
+	always @(posedge vga_clock) begin
+		leds[1] = 1;
+		if (count == 25_00_000) begin
+			leds[0] <= ~leds[0];
+			count <= 0;
+		end else begin
+			count <= count + 1;
+		end
+	end
 
 	wire [3:0] red;
 	wire [3:0] green;

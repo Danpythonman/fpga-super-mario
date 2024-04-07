@@ -5,6 +5,8 @@ module StartScreenDrawer
 	parameter BLK = 2,
 	parameter GND = 3,
 	parameter TKN = 4,
+	parameter CK1 = 5,
+	parameter CK2 = 6,
 	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
@@ -16,20 +18,26 @@ module StartScreenDrawer
 	input left_switch,
 	input right_switch,
 	input jump_button,
-	input int row,
-	input int column,
-	input display_enable,
-	output [3:0] vga_red,
-	output [3:0] vga_green,
-	output [3:0] vga_blue,
+	output byte background [11:0][16:0],
+	output int mario_x,
+	output int mario_y,
+	output int goomba_x,
+	output int goomba_y,
+	output int seconds,
+	output win,
+	output lose,
 	output [9:0] leds
 );
 
-	int mario_x;
-	int mario_y;
-	logic [2:0] touch;
+	assign mario_x = 1000;
+	assign mario_y = 1000;
+	assign goomba_x = 1000;
+	assign goomba_y = 1000;
+	assign seconds = 0;
+	assign win = 0;
+	assign lose = 0;
 
-	byte background [11:0][16:0] = '{
+	assign background = '{
 		'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR},
 		'{ BDR, BDR, SKY, SKY, BDR, BDR, SKY, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
 		'{ BDR, SKY, BDR, BDR, SKY, BDR, SKY, BDR, SKY, BDR, BDR, SKY, BDR, BDR, BDR, SKY, BDR},
@@ -50,31 +58,5 @@ module StartScreenDrawer
 	x (right to left)[0-16]
 	y (down to up)[0-11]
 	*/
-
-	VgaInterface
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) vgaInterface (
-		.vga_clock(vga_clock),
-		.reset(reset),
-		.number(0),
-		.mario_x(200),
-		.mario_y(200),
-		.background(background),
-		.row(row),
-		.column(column),
-		.display_enable(display_enable),
-		.vga_red(vga_red),
-		.vga_green(vga_green),
-		.vga_blue(vga_blue)
-	);
 
 endmodule
