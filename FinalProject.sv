@@ -52,6 +52,9 @@ module FinalProject
 	int mario_y;
 	int goomba_x;
 	int goomba_y;
+	int goomba_2x;
+	int goomba_2y;
+	wire show_hearts;
 	int lives;
 	int seconds;
 
@@ -79,6 +82,9 @@ module FinalProject
 		.mario_y(mario_y),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
+		.goomba_2x(goomba_2x),
+		.goomba_2y(goomba_2y),
+		.show_hearts(show_hearts),
 		.seconds(seconds),
 		.lives(lives),
 		.leds(leds)
@@ -103,8 +109,11 @@ module FinalProject
 		.background(background),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		.goomba_2x(goomba_2x),
+		.goomba_2y(goomba_2y),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
+		.show_hearts(show_hearts),
 		.row(row),
 		.column(column),
 		.display_enable(display_enable),

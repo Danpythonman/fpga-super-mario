@@ -23,6 +23,8 @@ module Level3
 	output int mario_y,
 	output int goomba_x,
 	output int goomba_y,
+	output int goomba_2x,
+	output int goomba_2y,
 	output int seconds,
 	output win,
 	output lose,
@@ -95,6 +97,34 @@ module Level3
 		.lose(mario_hit_goomba)
 	);
 
+	wire mario_hit_goomba2;
+
+	GoombaMover
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH),
+		.STARTX(500),
+		.STARTY(150)
+	) goombaMover2 (
+		.vga_clock(vga_clock),
+		.reset(reset),
+		.left(left_switch),
+		.right(right_switch),
+		.jump(jump_button),
+		.background(background),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
+		.goomba_x(goomba_2x),
+		.goomba_y(goomba_2y),
+		.lose(mario_hit_goomba2)
+	);
+
 	logic [2:0] touch;
 
 	MarioCoin
@@ -111,8 +141,8 @@ module Level3
 	) marioCoin1 (
 		.clk(vga_clock),
 		.reset(reset),
-		.x(6),
-		.y(6),
+		.x(14),
+		.y(2),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
 		.touch(touch[0])
@@ -132,48 +162,72 @@ module Level3
 	) marioCoin2 (
 		.clk(vga_clock),
 		.reset(reset),
-		.x(14),
-		.y(2),
+		.x(15),
+		.y(7),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
 		.touch(touch[1])
+	);
+
+	MarioCoin
+	#(
+		.BDR(BDR),
+		.SKY(SKY),
+		.BLK(BLK),
+		.GND(GND),
+		.TKN(TKN),
+		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+		.SCREEN_WIDTH(SCREEN_WIDTH),
+		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+		.BLOCK_WIDTH(BLOCK_WIDTH)
+	) marioCoin3 (
+		.clk(vga_clock),
+		.reset(reset),
+		.x(3),
+		.y(4),
+		.mario_x(mario_x),
+		.mario_y(mario_y),
+		.touch(touch[2])
 	);
 
 	int number_of_coins;
 
 	always@(posedge vga_clock or negedge reset) begin
 		if (!reset) begin
-			number_of_coins <= 2;
+			number_of_coins <= 3;
 			background <= '{
-				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
-				'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
-				'{ SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				 '{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
+				 '{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
+				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY },
+				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY },
+				 '{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY }, // [15][7]
 
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				 '{ BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, TKN, SKY, SKY, SKY }, // [3][4]
+				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 
-				'{ SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ BDR, CK2, CK1, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
-			};
+				 '{ SKY, SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, // [14][2]
+				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+				 '{ BDR, CK2, CK1, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
+         };
 			// background [6][6] <= TKN;
 			// background [2][14] <= TKN;
 		end else begin
 			if (touch[0]) begin
-				background [6][6] <= SKY; // [y][x]
+				background [2][14] <= SKY; // [y][x]
 				number_of_coins <= number_of_coins - 1;
 			end else if(touch[1])begin
-				background [2][14] <= SKY; // [y][x]
+				background [7][15] <= SKY; // [y][x]
+				number_of_coins <= number_of_coins - 1;
+			end else if(touch[2])begin
+				background [4][3] <= SKY; // [y][x]
 				number_of_coins <= number_of_coins - 1;
 			end
 		end
 	end
 
 	assign win = number_of_coins == 0;
-	assign lose = mario_hit_goomba || seconds_done;
+	assign lose = mario_hit_goomba || mario_hit_goomba2 || seconds_done;
 
 endmodule

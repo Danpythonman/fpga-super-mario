@@ -7,7 +7,9 @@ module GoombaMover
 	parameter CHARACTER_WIDTH = 42,
 	parameter SCREEN_WIDTH = 640,
 	parameter SCREEN_HEIGHT = 480,
-	parameter BLOCK_WIDTH = 40
+	parameter BLOCK_WIDTH = 40,
+	parameter STARTX = 300,
+	parameter STARTY = 360
 )
 (
 	input vga_clock,
@@ -31,7 +33,7 @@ module GoombaMover
 		.movement_clock(movement_clock)
 	);
 
-	assign goomba_y = 360;
+	assign goomba_y = STARTY;
 
 	wire mario_hit_goomba;
 	assign lose = mario_hit_goomba;
@@ -45,7 +47,8 @@ module GoombaMover
 		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
+		.BLOCK_WIDTH(BLOCK_WIDTH),
+		.STARTX(STARTX)
 	) goombaLeftRightMover (
 		.movement_clock(movement_clock),
 		.background(background),

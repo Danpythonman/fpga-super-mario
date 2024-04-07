@@ -17,7 +17,7 @@ module VgaHeartDrawer
 	localparam COLOR3 = 3;
 	localparam COLOR4 = 4;
 
-	reg [3:0] pattern [38:0][38:0] = '{
+	reg [3:0] pattern [0:38][0:38] = '{
 		'{
 			COLOR1,
 			COLOR1,
@@ -1625,9 +1625,9 @@ module VgaHeartDrawer
 			green <= background_green;
 			blue  <= background_blue;
 		end else if (pattern[x][y] == COLOR1) begin
-			red   <= 4'd13;
-			green <= 4'd13;
-			blue  <= 4'd13;
+			red   <= 4'd0;
+			green <= 4'd0;
+			blue  <= 4'd0;
 		end else if (pattern[x][y] == COLOR2) begin
 			red   <= 4'd2;
 			green <= 4'd2;

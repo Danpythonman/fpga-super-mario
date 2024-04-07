@@ -24,6 +24,9 @@ module FinalProjectGameLogic
 	output int mario_y,
 	output int goomba_x,
 	output int goomba_y,
+	output int goomba_2x,
+	output int goomba_2y,
+	output show_hearts,
 	output int seconds,
 	output int lives,
 	output [9:0] leds
@@ -178,6 +181,8 @@ module FinalProjectGameLogic
 	int level3_mario_y;
 	int level3_goomba_x;
 	int level3_goomba_y;
+	int level3_goomba_2x;
+	int level3_goomba_2y;
 	int level3_seconds;
 	wire level3_win;
 	wire level3_lose;
@@ -195,6 +200,8 @@ module FinalProjectGameLogic
 		.mario_y      (level3_mario_y),
 		.goomba_x     (level3_goomba_x),
 		.goomba_y     (level3_goomba_y),
+		.goomba_2x     (level3_goomba_2x),
+		.goomba_2y     (level3_goomba_2y),
 		.seconds      (level3_seconds),
 		.win          (level3_win),
 		.lose         (level3_lose),
@@ -333,6 +340,9 @@ module FinalProjectGameLogic
 				mario_y    = start_screen_mario_y;
 				goomba_x   = start_screen_goomba_x;
 				goomba_y   = start_screen_goomba_y;
+				goomba_2x   = 1000;
+				goomba_2y   = 1000;
+				show_hearts = 0;
 				seconds    = start_screen_seconds;
 			end
 			PRELEVEL1: begin
@@ -347,6 +357,9 @@ module FinalProjectGameLogic
 				mario_y    = prelevel1_mario_y;
 				goomba_x   = prelevel1_goomba_x;
 				goomba_y   = prelevel1_goomba_y;
+				goomba_2x   = 1000;
+				goomba_2y   = 1000;
+				show_hearts = 1;
 				seconds    = prelevel1_seconds;
 			end
 			LEVEL1: begin
@@ -361,6 +374,9 @@ module FinalProjectGameLogic
 				mario_y    = level1_mario_y;
 				goomba_x   = level1_goomba_x;
 				goomba_y   = level1_goomba_y;
+				goomba_2x   = 1000;
+				goomba_2y   = 1000;
+				show_hearts = 1;
 				seconds    = level1_seconds;
 			end
 			LEVEL2: begin
@@ -375,6 +391,9 @@ module FinalProjectGameLogic
 				mario_y    = level2_mario_y;
 				goomba_x   = level2_goomba_x;
 				goomba_y   = level2_goomba_y;
+				goomba_2x   = 1000;
+				goomba_2y   = 1000;
+				show_hearts = 1;
 				seconds    = level2_seconds;
 			end
 			LEVEL3: begin
@@ -389,6 +408,9 @@ module FinalProjectGameLogic
 				mario_y    = level3_mario_y;
 				goomba_x   = level3_goomba_x;
 				goomba_y   = level3_goomba_y;
+				goomba_2x   = level3_goomba_2x;
+				goomba_2y   = level3_goomba_2y;
+				show_hearts = 1;
 				seconds    = level3_seconds;
 			end
 			WIN: begin
@@ -403,6 +425,9 @@ module FinalProjectGameLogic
 				mario_y    = win_screen_mario_y;
 				goomba_x   = win_screen_goomba_x;
 				goomba_y   = win_screen_goomba_y;
+				goomba_2x   = 1000;
+				goomba_2y   = 1000;
+				show_hearts = 0;
 				seconds    = win_screen_seconds;
 			end
 			GAME_OVER: begin
@@ -417,6 +442,9 @@ module FinalProjectGameLogic
 				mario_y    = game_over_mario_y;
 				goomba_x   = game_over_goomba_x;
 				goomba_y   = game_over_goomba_y;
+				goomba_2x   = 1000;
+				goomba_2y   = 1000;
+				show_hearts = 0;
 				seconds    = game_over_seconds;
 			end
 		endcase

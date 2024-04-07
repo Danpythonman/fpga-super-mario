@@ -22,6 +22,9 @@ module VgaDrawer
 	input      int mario_y,
 	input int goomba_x,
 	input int goomba_y,
+	input int goomba_2x,
+	input int goomba_2y,
+	input show_hearts,
 	input byte background [11:0][16:0],
 	output reg [3:0]  red,
 	output reg [3:0]  green,
@@ -52,6 +55,10 @@ module VgaDrawer
 		.blue(mario_blue)
 	);
 
+	wire [3:0] goomba2_red;
+	wire [3:0] goomba2_green;
+	wire [3:0] goomba2_blue;
+
 	VgaGoombaDrawer vgaGoombaDrawer (
 		.x(col - goomba_x),
 		.y(row - goomba_y),
@@ -62,6 +69,18 @@ module VgaDrawer
 		.red(goomba_red),
 		.green(goomba_green),
 		.blue(goomba_blue)
+	);
+
+	VgaGoombaDrawer vgaGoombaDrawer2 (
+		.x(col - goomba_2x),
+		.y(row - goomba_2y),
+		.background(background),
+		.background_red(background_red),
+		.background_green(background_green),
+		.background_blue(background_blue),
+		.red(goomba2_red),
+		.green(goomba2_green),
+		.blue(goomba2_blue)
 	);
 
 	VgaEnvironmentDrawer #(
@@ -81,6 +100,7 @@ module VgaDrawer
 		.col(col),
 		.row(row),
 		.number(number),
+		.show_hearts(show_hearts),
 		.lives(lives),
 		.background(background),
 		.red(background_red),
@@ -101,6 +121,12 @@ module VgaDrawer
 			red <= goomba_red;
 			green <= goomba_green;
 			blue <= goomba_blue;
+		end else if(col >= goomba_2x && col <= goomba_2x + CHARACTER_WIDTH
+			&& row >= goomba_2y && row <= goomba_2y + CHARACTER_WIDTH
+		) begin 
+			red <= goomba2_red;
+			green <= goomba2_green;
+			blue <= goomba2_blue;
 	end else begin
 			red <= background_red;
 			green <= background_green;
@@ -130,6 +156,7 @@ module VgaEnvironmentDrawer
 	input      int col,
 	input int number,
 	input int lives,
+	input show_hearts,
 	input byte background [11:0][16:0],
 	output reg [3:0]  red,
 	output reg [3:0]  green,
@@ -262,17 +289,17 @@ module VgaEnvironmentDrawer
 			green <= 1;
 			blue <= 1;
 		end
-		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 2 && lives == 3) begin
+		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 2 && lives == 3 && show_hearts) begin
 			red <= heart_red;
 			green <= heart_green;
 			blue <= heart_blue;
 		end
-		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 1 && lives >= 2) begin
+		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 1 && lives >= 2 && show_hearts) begin
 			red <= heart_red;
 			green <= heart_green;
 			blue <= heart_blue;
 		end
-		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 0 && lives >= 1) begin
+		else if (row / BLOCK_WIDTH == 0 && col / BLOCK_WIDTH == 0 && lives >= 1 && show_hearts) begin
 			red <= heart_red;
 			green <= heart_green;
 			blue <= heart_blue;
