@@ -26,7 +26,7 @@ module LevelFinish
 	output int goomba_2x,
 	output int goomba_2y,
 	output int seconds,
-	output win,
+	output reg win,
 	output lose,
 	output [9:0] leds
 );
@@ -36,16 +36,16 @@ module LevelFinish
 	assign goomba_2x = 1000;
 	assign goomba_2y = 1000;
 
-	wire seconds_done;
-
-	SecondsCounter secondsCounter
-	(
-		.vga_clock(vga_clock),
-		.reset(reset),
-		.seconds(seconds),
-		.done(seconds_done),
-		.leds(leds)
-	);
+//	wire seconds_done;
+//
+//	SecondsCounter secondsCounter
+//	(
+//		.vga_clock(vga_clock),
+//		.reset(reset),
+//		.seconds(seconds),
+//		.done(seconds_done),
+//		.leds(leds)
+//	);
 
 	/* TOP LEFT (of screen) IS BOTTOM RIGHT (of array)
 	x (right to left)[0-16]
@@ -76,33 +76,33 @@ module LevelFinish
 		.mario_y(mario_y)	
 	);
 
-	logic touch;
+//	logic touch;
 
-    MarioCoin
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioCoin1 (
-		.clk(vga_clock),
-		.reset(reset),
-		.x(15),
-		.y(3),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.touch(touch)
-	);
-
-	int number_of_coins;
+//    MarioCoin
+//	#(
+//		.BDR(BDR),
+//		.SKY(SKY),
+//		.BLK(BLK),
+//		.GND(GND),
+//		.TKN(TKN),
+//		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+//		.SCREEN_WIDTH(SCREEN_WIDTH),
+//		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+//		.BLOCK_WIDTH(BLOCK_WIDTH)
+//	) marioCoin1 (
+//		.clk(vga_clock),
+//		.reset(reset),
+//		.x(15),
+//		.y(3),
+//		.mario_x(mario_x),
+//		.mario_y(mario_y),
+//		.touch(touch)
+//	);
+//	int number_of_coins;
 	always@(posedge vga_clock or negedge reset) begin
 		if (!reset) begin
-			number_of_coins <= 1;
+			win <= 0;
+//			number_of_coins <= 1;
 			background <= '{
 				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
 				'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
@@ -119,15 +119,22 @@ module LevelFinish
 				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
 			};
+			// background [5][2] <= TKN;
+			// background [2][15] <= TKN;
+			// background [2][9] <= TKN;
+
 		end else begin
-			if (touch) begin
-				background [3][15] <= SKY; // [y][x]
-				number_of_coins <= number_of_coins - 1;
+			if (mario_x >= 600 && mario_y >= 120) begin
+				win <= 1;
+//				background [3][15] <= SKY; // [y][x]
+//				number_of_coins <= number_of_coins - 1;
+			end else begin
+				win <= 0;
 			end
 		end
 	end
 
-	assign win = number_of_coins == 0;
+//	assign win = number_of_coins == 0;
 	assign lose = 0;
 
 endmodule

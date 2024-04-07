@@ -97,7 +97,7 @@ module FinalProject
 		.GND(GND),
 		.TKN(TKN),
 		.CK1(CK1),
-		.CK2(CK1),
+		.CK2(CK2),
 		.CHARACTER_WIDTH(CHARACTER_WIDTH),
 		.SCREEN_WIDTH(SCREEN_WIDTH),
 		.SCREEN_HEIGHT(SCREEN_HEIGHT),
@@ -105,7 +105,7 @@ module FinalProject
 	) finalProjectVgaLogic (
 		.vga_clock(vga_clock),
 		.reset(reset),
-		.number(number),
+		.number(seconds),
 		.background(background),
 		.mario_x(mario_x),
 		.mario_y(mario_y),

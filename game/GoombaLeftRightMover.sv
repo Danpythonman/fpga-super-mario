@@ -18,10 +18,11 @@ module GoombaLeftRightMover
 	input int mario_y,
 	input int goomba_y,
 	output int goomba_x,
-	output logic lose
+	output logic lose,
+	output [4:0] leds
 );
 
-	int previous_goomba_x = STARTX;
+//	int previous_goomba_x = STARTX;
 	int goomba_left;
 	int goomba_right;
 	int goomba_top;
@@ -61,7 +62,8 @@ module GoombaLeftRightMover
 						state <= KILL;
 					else if (mario_x + CHARACTER_WIDTH >= goomba_x
 							&& mario_x <= goomba_x + CHARACTER_WIDTH
-							&& mario_y + CHARACTER_WIDTH >= goomba_y)
+							&& mario_y + CHARACTER_WIDTH >= goomba_y
+							&& mario_y <= goomba_y + CHARACTER_WIDTH)
 						state <= LOSE;
 					else if (background[goomba_top][goomba_left] == BLK 
 							|| background[goomba_bottom][goomba_left] == BLK
@@ -75,9 +77,10 @@ module GoombaLeftRightMover
 							&& mario_x <= goomba_x + CHARACTER_WIDTH
 							&& mario_y + CHARACTER_WIDTH == goomba_y)
 						state <= KILL;
-					else if  (mario_x + CHARACTER_WIDTH >= goomba_x
+					else if (mario_x + CHARACTER_WIDTH >= goomba_x
 							&& mario_x <= goomba_x + CHARACTER_WIDTH
-							&& mario_y + CHARACTER_WIDTH >= goomba_y)
+							&& mario_y + CHARACTER_WIDTH >= goomba_y
+							&& mario_y <= goomba_y + CHARACTER_WIDTH)
 						state <= LOSE;
 					else if (background[goomba_top][goomba_right] == BLK 
 							|| background[goomba_bottom][goomba_right] == BLK 
@@ -105,22 +108,27 @@ module GoombaLeftRightMover
 			RESET: begin
 				lose <= 0;
 				goomba_x <= STARTX;
+				leds <= 5'b00001;
 			end
 			LEFT: begin
 				lose <= 0;
 				goomba_x <= goomba_x - 1;
+				leds <= 5'b00010;
 			end
 			RIGHT: begin
 				lose <= 0;
 				goomba_x <= goomba_x + 1;
+				leds <= 5'b00100;
 			end
 			KILL: begin
 				lose <= 0;
 				goomba_x <= 1000; // put goomba off screen
+				leds <= 5'b0100;
 			end
 			LOSE: begin
 				lose <= 1;
 				goomba_x <= goomba_x;
+				leds <= 5'b10000;
 			end
 		endcase
 	end

@@ -2,7 +2,6 @@ module Number1
 (
 	input [31:0] x,
 	input [31:0] y,
-	input byte background [11:0][16:0],
 	input [3:0] background_red,
 	input [3:0] background_green,
 	input [3:0] background_blue,

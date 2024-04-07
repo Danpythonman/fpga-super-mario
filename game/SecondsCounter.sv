@@ -23,7 +23,7 @@ module SecondsCounter
 	always @(posedge vga_clock) begin
 		case (state)
 			RESET: begin
-				seconds <= 60;
+				seconds <= 25;
 				tick_count <= 0;
 				done <= 0;
 			end

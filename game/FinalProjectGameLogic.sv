@@ -205,7 +205,7 @@ module FinalProjectGameLogic
 		.seconds      (level3_seconds),
 		.win          (level3_win),
 		.lose         (level3_lose),
-		.leds         (level3_leds)
+		.leds         (leds)
 	);
 
 	wire level_finish_vga_clock;
@@ -571,10 +571,5 @@ module FinalProjectGameLogic
 			endcase
 		end
 	end
-
-	assign leds[9] = lives == 3;
-	assign leds[8] = lives == 2;
-	assign leds[7] = lives == 1;
-	assign leds[6] = lives == 0;
 
 endmodule

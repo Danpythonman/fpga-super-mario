@@ -2,13 +2,18 @@ module VgaGoombaDrawer
 (
 	input [31:0] x,
 	input [31:0] y,
+	input [31:0] x2,
+	input [31:0] y2,
 	input byte background [11:0][16:0],
 	input [3:0] background_red,
 	input [3:0] background_green,
 	input [3:0] background_blue,
 	output reg [3:0] red,
 	output reg [3:0] green,
-	output reg [3:0] blue
+	output reg [3:0] blue,
+	output reg [3:0] red2,
+	output reg [3:0] green2,
+	output reg [3:0] blue2
 );
 
 	localparam NULL = 0;
@@ -1685,6 +1690,65 @@ module VgaGoombaDrawer
 			red   <= 4'd6;
 			green <= 4'd6;
 			blue  <= 4'd9;
+		end	end
+
+	always @(x2, y2) begin
+		if (pattern[x2][y2] == NULL) begin
+			red2   <= background_red;
+			green2 <= background_green;
+			blue2  <= background_blue;
+		end else if (pattern[x2][y2] == COLOR1) begin
+			red2   <= background_red;
+			green2 <= background_green;
+			blue2  <= background_blue;
+		end else if (pattern[x2][y2] == COLOR2) begin
+			red2   <= 4'd9;
+			green2 <= 4'd6;
+			blue2  <= 4'd2;
+		end else if (pattern[x2][y2] == COLOR3) begin
+			red2   <= 4'd9;
+			green2 <= 4'd9;
+			blue2  <= 4'd6;
+		end else if (pattern[x2][y2] == COLOR4) begin
+			red2   <= 4'd13;
+			green2 <= 4'd9;
+			blue2  <= 4'd9;
+		end else if (pattern[x2][y2] == COLOR5) begin
+			red2   <= 4'd9;
+			green2 <= 4'd9;
+			blue2  <= 4'd9;
+		end else if (pattern[x2][y2] == COLOR6) begin
+			red2   <= 4'd9;
+			green2 <= 4'd6;
+			blue2  <= 4'd6;
+		end else if (pattern[x2][y2] == COLOR7) begin
+			red2   <= 4'd6;
+			green2 <= 4'd6;
+			blue2  <= 4'd6;
+		end else if (pattern[x2][y2] == COLOR8) begin
+			red2   <= 4'd6;
+			green2 <= 4'd6;
+			blue2  <= 4'd2;
+		end else if (pattern[x2][y2] == COLOR9) begin
+			red2   <= 4'd2;
+			green2 <= 4'd2;
+			blue2  <= 4'd2;
+		end else if (pattern[x2][y2] == COLOR10) begin
+			red2   <= 4'd13;
+			green2 <= 4'd13;
+			blue2  <= 4'd9;
+		end else if (pattern[x2][y2] == COLOR11) begin
+			red2   <= 4'd6;
+			green2 <= 4'd2;
+			blue2  <= 4'd2;
+		end else if (pattern[x2][y2] == COLOR12) begin
+			red2   <= 4'd13;
+			green2 <= 4'd9;
+			blue2  <= 4'd6;
+		end else if (pattern[x2][y2] == COLOR13) begin
+			red2   <= 4'd6;
+			green2 <= 4'd6;
+			blue2  <= 4'd9;
 		end	end
 
 endmodule

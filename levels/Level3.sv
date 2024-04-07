@@ -38,8 +38,8 @@ module Level3
 		.vga_clock(vga_clock),
 		.reset(reset),
 		.seconds(seconds),
-		.done(seconds_done),
-		.leds(leds)
+		.done(seconds_done)
+//		.leds(leds)
 	);
 
 	/* TOP LEFT (of screen) IS BOTTOM RIGHT (of array)
@@ -94,7 +94,8 @@ module Level3
 		.mario_y(mario_y),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
-		.lose(mario_hit_goomba)
+		.lose(mario_hit_goomba),
+		.leds(leds[9:5])
 	);
 
 	wire mario_hit_goomba2;
@@ -122,10 +123,11 @@ module Level3
 		.mario_y(mario_y),
 		.goomba_x(goomba_2x),
 		.goomba_y(goomba_2y),
-		.lose(mario_hit_goomba2)
+		.lose(mario_hit_goomba2),
+		.leds(leds[4:0])
 	);
 
-	logic [2:0] touch;
+	logic [1:0] touch;
 
 	MarioCoin
 	#(
@@ -148,26 +150,26 @@ module Level3
 		.touch(touch[0])
 	);
 
-	MarioCoin
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.TKN(TKN),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) marioCoin2 (
-		.clk(vga_clock),
-		.reset(reset),
-		.x(15),
-		.y(7),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.touch(touch[1])
-	);
+//	MarioCoin
+//	#(
+//		.BDR(BDR),
+//		.SKY(SKY),
+//		.BLK(BLK),
+//		.GND(GND),
+//		.TKN(TKN),
+//		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+//		.SCREEN_WIDTH(SCREEN_WIDTH),
+//		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+//		.BLOCK_WIDTH(BLOCK_WIDTH)
+//	) marioCoin2 (
+//		.clk(vga_clock),
+//		.reset(reset),
+//		.x(15),
+//		.y(7),
+//		.mario_x(mario_x),
+//		.mario_y(mario_y),
+//		.touch(touch[1])
+//	);
 
 	MarioCoin
 	#(
@@ -187,20 +189,20 @@ module Level3
 		.y(4),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
-		.touch(touch[2])
+		.touch(touch[1])
 	);
 
 	int number_of_coins;
 
 	always@(posedge vga_clock or negedge reset) begin
 		if (!reset) begin
-			number_of_coins <= 3;
+			number_of_coins <= 2;
 			background <= '{
 				 '{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
 				 '{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
 				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY },
 				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY },
-				 '{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY }, // [15][7]
+				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY }, // [15][7]
 
 				 '{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
 				 '{ BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
@@ -217,10 +219,10 @@ module Level3
 			if (touch[0]) begin
 				background [2][14] <= SKY; // [y][x]
 				number_of_coins <= number_of_coins - 1;
+//			end else if(touch[1])begin
+//				background [7][15] <= SKY; // [y][x]
+//				number_of_coins <= number_of_coins - 1;
 			end else if(touch[1])begin
-				background [7][15] <= SKY; // [y][x]
-				number_of_coins <= number_of_coins - 1;
-			end else if(touch[2])begin
 				background [4][3] <= SKY; // [y][x]
 				number_of_coins <= number_of_coins - 1;
 			end

@@ -22,7 +22,8 @@ module GoombaMover
 	input int mario_y,
 	output int goomba_x,
 	output int goomba_y,
-	output lose
+	output lose,
+	output [4:0] leds
 );
 
 	wire movement_clock;
@@ -57,7 +58,8 @@ module GoombaMover
 		.mario_y(mario_y),
 		.goomba_y(goomba_y),
 		.goomba_x(goomba_x),
-		.lose(mario_hit_goomba)
+		.lose(mario_hit_goomba),
+		.leds(leds)
 	);
 
 endmodule
