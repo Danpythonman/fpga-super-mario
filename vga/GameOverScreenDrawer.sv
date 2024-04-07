@@ -23,6 +23,8 @@ module GameOverScreenDrawer
 	output int mario_y,
 	output int goomba_x,
 	output int goomba_y,
+	output int goomba_2x,
+	output int goomba_2y,
 	output int seconds,
 	output win,
 	output lose,

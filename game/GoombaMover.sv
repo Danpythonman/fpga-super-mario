@@ -18,6 +18,8 @@ module GoombaMover
 	input byte background [11:0][16:0],
 	input int mario_x,
 	input int mario_y,
+	input int goomba_x_initial,
+    input int goomba_y_initial,
 	output int goomba_x,
 	output int goomba_y,
 	output lose
@@ -31,7 +33,7 @@ module GoombaMover
 		.movement_clock(movement_clock)
 	);
 
-	assign goomba_y = 360;
+	// assign goomba_y = 360;
 
 	wire mario_hit_goomba;
 	assign lose = mario_hit_goomba;
@@ -52,6 +54,8 @@ module GoombaMover
 		.reset(reset),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		.goomba_x_initial(goomba_x_initial),
+        .goomba_y_initial(goomba_y_initial),
 		.goomba_y(goomba_y),
 		.goomba_x(goomba_x),
 		.lose(mario_hit_goomba)

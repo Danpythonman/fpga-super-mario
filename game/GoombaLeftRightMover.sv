@@ -15,12 +15,14 @@ module GoombaLeftRightMover
 	input byte background [11:0][16:0],
 	input int mario_x,
 	input int mario_y,
+	input int goomba_x_initial,
+	input int goomba_y_initial,
 	input int goomba_y,
 	output int goomba_x,
 	output logic lose
 );
 
-	int previous_goomba_x = 100;
+	// int previous_goomba_x = 100;
 	int goomba_left;
 	int goomba_right;
 	int goomba_top;
@@ -103,7 +105,8 @@ module GoombaLeftRightMover
 		case(state)
 			RESET: begin
 				lose <= 0;
-				goomba_x <= 300;
+				goomba_x <= goomba_x_initial;
+				goomba_y <= goomba_y_initial;
 			end
 			LEFT: begin
 				lose <= 0;

@@ -24,8 +24,9 @@ module FinalProjectGameLogic
 	output int mario_y,
 	output int goomba_x,
 	output int goomba_y,
-	output int seconds,
-	output [9:0] leds
+	output int goomba_2x,
+	output int goomba_2y,
+	output int seconds
 );
 
 	wire start_screen_vga_clock;
@@ -38,6 +39,8 @@ module FinalProjectGameLogic
 	int start_screen_mario_y;
 	int start_screen_goomba_x;
 	int start_screen_goomba_y;
+	int start_screen_goomba_2x;
+	int start_screen_goomba_2y;
 	int start_screen_seconds;
 	wire start_screen_win;
 	wire start_screen_lose;
@@ -55,6 +58,8 @@ module FinalProjectGameLogic
 		.mario_y      (start_screen_mario_y),
 		.goomba_x     (start_screen_goomba_x),
 		.goomba_y     (start_screen_goomba_y),
+		.goomba_2x     (start_screen_goomba_2x),
+		.goomba_2y     (start_screen_goomba_2y),
 		.seconds      (start_screen_seconds),
 		.win          (start_screen_win),
 		.lose         (start_screen_lose),
@@ -71,28 +76,32 @@ module FinalProjectGameLogic
 	int level1_mario_y;
 	int level1_goomba_x;
 	int level1_goomba_y;
+	int level1_goomba_2x;
+	int level1_goomba_2y;
 	int level1_seconds;
 	wire level1_win;
 	wire level1_lose;
 	wire [9:0] level1_leds;
 
-	Level1 level1
-	(
-		.vga_clock    (level1_vga_clock),
-		.reset        (level1_reset),
-		.left_switch  (level1_left_switch),
-		.right_switch (level1_right_switch),
-		.jump_button  (level1_jump_button),
-		.background   (level1_background),
-		.mario_x      (level1_mario_x),
-		.mario_y      (level1_mario_y),
-		.goomba_x     (level1_goomba_x),
-		.goomba_y     (level1_goomba_y),
-		.seconds      (level1_seconds),
-		.win          (level1_win),
-		.lose         (level1_lose),
-		.leds         (level1_leds)
-	);
+//	Level1 level1
+//	(
+//		.vga_clock    (level1_vga_clock),
+//		.reset        (level1_reset),
+//		.left_switch  (level1_left_switch),
+//		.right_switch (level1_right_switch),
+//		.jump_button  (level1_jump_button),
+//		.background   (level1_background),
+//		.mario_x      (level1_mario_x),
+//		.mario_y      (level1_mario_y),
+//		.goomba_x     (level1_goomba_x),
+//		.goomba_y     (level1_goomba_y),
+//		.goomba_2x     (level1_goomba_2x),
+//		.goomba_2y     (level1_goomba_2y),
+//		.seconds      (level1_seconds),
+//		.win          (level1_win),
+//		.lose         (level1_lose),
+//		.leds         (level1_leds)
+//	);
 
 	wire level2_vga_clock;
 	wire level2_reset;
@@ -104,6 +113,8 @@ module FinalProjectGameLogic
 	int level2_mario_y;
 	int level2_goomba_x;
 	int level2_goomba_y;
+	int level2_goomba_2x;
+	int level2_goomba_2y;
 	int level2_seconds;
 	wire level2_win;
 	wire level2_lose;
@@ -121,6 +132,8 @@ module FinalProjectGameLogic
 		.mario_y      (level2_mario_y),
 		.goomba_x     (level2_goomba_x),
 		.goomba_y     (level2_goomba_y),
+		.goomba_2x     (level2_goomba_2x),
+		.goomba_2y     (level2_goomba_2y),
 		.seconds      (level2_seconds),
 		.win          (level2_win),
 		.lose         (level2_lose),
@@ -137,6 +150,8 @@ module FinalProjectGameLogic
 	int level3_mario_y;
 	int level3_goomba_x;
 	int level3_goomba_y;
+	int level3_goomba_2x;
+	int level3_goomba_2y;
 	int level3_seconds;
 	wire level3_win;
 	wire level3_lose;
@@ -154,6 +169,8 @@ module FinalProjectGameLogic
 		.mario_y      (level3_mario_y),
 		.goomba_x     (level3_goomba_x),
 		.goomba_y     (level3_goomba_y),
+		.goomba_2x     (level3_goomba_2x),
+		.goomba_2y     (level3_goomba_2y),
 		.seconds      (level3_seconds),
 		.win          (level3_win),
 		.lose         (level3_lose),
@@ -170,6 +187,8 @@ module FinalProjectGameLogic
 	int win_screen_mario_y;
 	int win_screen_goomba_x;
 	int win_screen_goomba_y;
+	int win_screen_goomba_2x;
+	int win_screen_goomba_2y;
 	int win_screen_seconds;
 	wire win_screen_win;
 	wire win_screen_lose;
@@ -187,6 +206,8 @@ module FinalProjectGameLogic
 		.mario_y      (win_screen_mario_y),
 		.goomba_x     (win_screen_goomba_x),
 		.goomba_y     (win_screen_goomba_y),
+		.goomba_2x     (win_screen_goomba_2x),
+		.goomba_2y     (win_screen_goomba_2y),
 		.seconds      (win_screen_seconds),
 		.win          (win_screen_win),
 		.lose         (win_screen_lose),
@@ -203,6 +224,8 @@ module FinalProjectGameLogic
 	int game_over_mario_y;
 	int game_over_goomba_x;
 	int game_over_goomba_y;
+	int game_over_goomba_2x;
+	int game_over_goomba_2y;
 	int game_over_seconds;
 	wire game_over_win;
 	wire game_over_lose;
@@ -220,6 +243,8 @@ module FinalProjectGameLogic
 		.mario_y      (game_over_mario_y),
 		.goomba_x     (game_over_goomba_x),
 		.goomba_y     (game_over_goomba_y),
+		.goomba_2x     (game_over_goomba_2x),
+		.goomba_2y     (game_over_goomba_2y),
 		.seconds      (game_over_seconds),
 		.win          (game_over_win),
 		.lose         (game_over_lose),
@@ -285,6 +310,8 @@ module FinalProjectGameLogic
 				mario_y    = start_screen_mario_y;
 				goomba_x   = start_screen_goomba_x;
 				goomba_y   = start_screen_goomba_y;
+				goomba_2x   = start_screen_goomba_2x;
+				goomba_2y   = start_screen_goomba_2y;
 				seconds    = start_screen_seconds;
 			end
 			LEVEL1: begin
@@ -299,6 +326,8 @@ module FinalProjectGameLogic
 				mario_y    = level1_mario_y;
 				goomba_x   = level1_goomba_x;
 				goomba_y   = level1_goomba_y;
+				goomba_2x   = level1_goomba_2x;
+				goomba_2y   = level1_goomba_2y;
 				seconds    = level1_seconds;
 			end
 			LEVEL2: begin
@@ -313,6 +342,8 @@ module FinalProjectGameLogic
 				mario_y    = level2_mario_y;
 				goomba_x   = level2_goomba_x;
 				goomba_y   = level2_goomba_y;
+				goomba_2x   = level2_goomba_2x;
+				goomba_2y   = level2_goomba_2y;
 				seconds    = level2_seconds;
 			end
 			LEVEL3: begin
@@ -327,6 +358,8 @@ module FinalProjectGameLogic
 				mario_y    = level3_mario_y;
 				goomba_x   = level3_goomba_x;
 				goomba_y   = level3_goomba_y;
+				goomba_2x   = level3_goomba_2x;
+				goomba_2y   = level3_goomba_2y;
 				seconds    = level3_seconds;
 			end
 			WIN: begin
@@ -341,6 +374,8 @@ module FinalProjectGameLogic
 				mario_y    = win_screen_mario_y;
 				goomba_x   = win_screen_goomba_x;
 				goomba_y   = win_screen_goomba_y;
+				goomba_2x   = win_screen_goomba_2x;
+				goomba_2y   = win_screen_goomba_2y;
 				seconds    = win_screen_seconds;
 			end
 			GAME_OVER: begin
@@ -355,6 +390,8 @@ module FinalProjectGameLogic
 				mario_y    = game_over_mario_y;
 				goomba_x   = game_over_goomba_x;
 				goomba_y   = game_over_goomba_y;
+				goomba_2x   = game_over_goomba_2x;
+				goomba_2y   = game_over_goomba_2y;
 				seconds    = game_over_seconds;
 			end
 		endcase

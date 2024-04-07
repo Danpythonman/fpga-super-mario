@@ -23,11 +23,16 @@ module Level2
 	output int mario_y,
 	output int goomba_x,
 	output int goomba_y,
+	output int goomba_2x,
+	output int goomba_2y,
 	output int seconds,
 	output win,
 	output lose,
 	output [9:0] leds
 );
+
+	assign goomba_2x = 1000;
+	assign goomba_2y = 1000;
 
 	wire seconds_done;
 
@@ -90,6 +95,8 @@ module Level2
 		.background(background),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		.goomba_x_initial(100),
+		.goomba_y_initial(360),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
 		.lose(mario_hit_goomba)

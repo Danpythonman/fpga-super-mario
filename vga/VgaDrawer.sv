@@ -21,6 +21,8 @@ module VgaDrawer
 	input      int mario_y,
 	input int goomba_x,
 	input int goomba_y,
+	input int goomba_2x,
+	input int goomba_2y,
 	input byte background [11:0][16:0],
 	output reg [3:0]  red,
 	output reg [3:0]  green,
@@ -39,6 +41,10 @@ module VgaDrawer
 	wire [3:0] goomba_green;
 	wire [3:0] goomba_blue;
 
+	wire [3:0] goomba_2red;
+	wire [3:0] goomba_2green;
+	wire [3:0] goomba_2blue;
+
 	VgaMarioDrawer vgaMarioDrawer (
 		.x(col - mario_x),
 		.y(row - mario_y),
@@ -51,7 +57,7 @@ module VgaDrawer
 		.blue(mario_blue)
 	);
 
-	VgaGoombaDrawer vgaGoombaDrawer (
+	VgaGoombaDrawer vgaGoombaDrawer1 (
 		.x(col - goomba_x),
 		.y(row - goomba_y),
 		.background(background),
@@ -61,6 +67,18 @@ module VgaDrawer
 		.red(goomba_red),
 		.green(goomba_green),
 		.blue(goomba_blue)
+	);
+
+		VgaGoombaDrawer vgaGoombaDrawer2 (
+		.x(col - goomba_2x),
+		.y(row - goomba_2y),
+		.background(background),
+		.background_red(background_red),
+		.background_green(background_green),
+		.background_blue(background_blue),
+		.red(goomba_2red),
+		.green(goomba_2green),
+		.blue(goomba_2blue)
 	);
 
 	VgaEnvironmentDrawer #(
@@ -99,6 +117,12 @@ module VgaDrawer
 			red <= goomba_red;
 			green <= goomba_green;
 			blue <= goomba_blue;
+	end else if(col >= goomba_2x && col <= goomba_2x + CHARACTER_WIDTH
+			&& row >= goomba_2y && row <= goomba_2y + CHARACTER_WIDTH
+		) begin 
+			red <= goomba_2red;
+			green <= goomba_2green;
+			blue <= goomba_2blue;
 	end else begin
 			red <= background_red;
 			green <= background_green;

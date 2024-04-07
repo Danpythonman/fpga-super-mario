@@ -52,6 +52,8 @@ module FinalProject
 	int mario_y;
 	int goomba_x;
 	int goomba_y;
+	int goomba_2x;
+	int goomba_2y;
 	int seconds;
 
 	FinalProjectGameLogic #(
@@ -78,6 +80,8 @@ module FinalProject
 		.mario_y(mario_y),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
+		.goomba_2x(goomba_2x),
+		.goomba_2y(goomba_2y),
 		.seconds(seconds)
 	);
 
@@ -102,6 +106,8 @@ module FinalProject
 		.mario_y(mario_y),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
+		.goomba_2x(goomba_2x),
+		.goomba_2y(goomba_2y),
 		.row(row),
 		.column(column),
 		.display_enable(display_enable),
