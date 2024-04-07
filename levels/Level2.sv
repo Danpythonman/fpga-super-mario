@@ -116,6 +116,8 @@ module Level2
 		.background(background),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		// .goomba_x_initial(300),
+		// .goomba_y_intitial(360),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
 		.lose(mario_hit_goomba)

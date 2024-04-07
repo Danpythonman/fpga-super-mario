@@ -121,6 +121,7 @@ module DE10_LITE_Golden_Top(
 `endif
 );
 
+assign LEDR = 10'b0000111100;
 	wire [9:0] fake_leds;
 	wire vga_clock;
 	wire useless_clock_that_were_not_gonna_use;
@@ -131,56 +132,56 @@ module DE10_LITE_Golden_Top(
 		.inclk0(MAX10_CLK1_50),
 		.c0(vga_clock)
 	);
-
-	pll_accelerometer pll_accelerometer_inst(
-		.inclk0(MAX10_CLK1_50),
-		.c0(useless_clock_that_were_not_gonna_use),
-		.c1(spi_clock),
-		.c2(spi_clock_shifted)
-	);
-
-	wire left;
-	wire right;
-	wire jump;
-
-	AccelerometerMovement
-	(
-		.clk(spi_clock),
-		.spi_clk(spi_clock_shifted),
-		.reset(KEY[1]),
-		.button(KEY[0]),
-		.left(left),
-		.SW(SW),
-		.HEX5(HEX5),
-		.HEX4(HEX4),
-		.HEX3(HEX3),
-		.HEX2(HEX2),
-		.HEX1(HEX1),
-		.HEX0(HEX0),
-		.LEDR(fake_leds),
-		.right(right),
-		.jump(jump),
-		.GSENSOR_CS_N(GSENSOR_CS_N),
-		.GSENSOR_INT(GSENSOR_INT),
-		.GSENSOR_SCLK(GSENSOR_SCLK),
-		.GSENSOR_SDI(GSENSOR_SDI),
-		.GSENSOR_SDO(GSENSOR_SDO)
-	);
-
-	FinalProject finalProject
-	(
-		.vga_clock(vga_clock),
-		.reset(KEY[1]),
-		.left_switch(left),
-		.right_switch(right),
-		.jump_button(~jump),
-		.start_button(KEY[0]),
-		.hsync(VGA_HS),
-		.vsync(VGA_VS),
-		.vga_red(VGA_R),
-		.vga_green(VGA_G),
-		.vga_blue(VGA_B),
-		.leds(LEDR)
-	);
+//
+//	pll_accelerometer pll_accelerometer_inst(
+//		.inclk0(MAX10_CLK1_50),
+//		.c0(useless_clock_that_were_not_gonna_use),
+//		.c1(spi_clock),
+//		.c2(spi_clock_shifted)
+//	);
+//
+//	wire left;
+//	wire right;
+//	wire jump;
+//
+//	AccelerometerMovement
+//	(
+//		.clk(spi_clock),
+//		.spi_clk(spi_clock_shifted),
+//		.reset(KEY[1]),
+//		.button(KEY[0]),
+//		.left(left),
+//		.SW(SW),
+//		.HEX5(HEX5),
+//		.HEX4(HEX4),
+//		.HEX3(HEX3),
+//		.HEX2(HEX2),
+//		.HEX1(HEX1),
+//		.HEX0(HEX0),
+//		.LEDR(fake_leds),
+//		.right(right),
+//		.jump(jump),
+//		.GSENSOR_CS_N(GSENSOR_CS_N),
+//		.GSENSOR_INT(GSENSOR_INT),
+//		.GSENSOR_SCLK(GSENSOR_SCLK),
+//		.GSENSOR_SDI(GSENSOR_SDI),
+//		.GSENSOR_SDO(GSENSOR_SDO)
+//	);
+//
+//	FinalProject finalProject
+//	(
+//		.vga_clock(vga_clock),
+//		.reset(KEY[1]),
+//		.left_switch(left),
+//		.right_switch(right),
+//		.jump_button(~jump),
+//		.start_button(KEY[0]),
+//		.hsync(VGA_HS),
+//		.vsync(VGA_VS),
+//		.vga_red(VGA_R),
+//		.vga_green(VGA_G),
+//		.vga_blue(VGA_B),
+//		.leds(LEDR)
+//	);
 
 endmodule

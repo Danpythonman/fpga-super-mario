@@ -15,6 +15,8 @@ module GoombaLeftRightMover
 	input byte background [11:0][16:0],
 	input int mario_x,
 	input int mario_y,
+	input int goomba_x_initial,
+	input int goomba_y_initial,
 	input int goomba_y,
 	output int goomba_x,
 	output logic lose
@@ -103,7 +105,8 @@ module GoombaLeftRightMover
 		case(state)
 			RESET: begin
 				lose <= 0;
-				goomba_x <= 300;
+				goomba_x <= goomba_x_initial;
+				goomba_y <= goomba_y_initial;
 			end
 			LEFT: begin
 				lose <= 0;
@@ -123,26 +126,5 @@ module GoombaLeftRightMover
 			end
 		endcase
 	end
-
-	// always_ff@(posedge movement_clock or negedge reset) begin
-	// 	if (!reset)
-	// 		previous_goomba_x <= 300;
-	// 	else begin
-	// 		if (state == RESET)
-	// 			previous_goomba_x <= 300;
-	// 		else
-	// 			previous_goomba_x <= goomba_x;
-	// 	end
-	// end
-
-	/*
-	 * Next state transition.
-	 */
-	// always_ff@(posedge movement_clock or negedge reset) begin
-	// 	if(~reset)
-	// 		state <= RESET;
-	// 	else
-	// 		state <= next_state;
-	// end
 
 endmodule

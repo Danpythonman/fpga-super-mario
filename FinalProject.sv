@@ -105,7 +105,6 @@ module FinalProject
 		.vga_blue    (level1_vga_blue),
 		.win(level1_win),
 		.lose(level1_lose),
-		// .leds        (level1_leds)
 		.leds        (leds)
 	);
 

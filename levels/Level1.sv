@@ -59,6 +59,12 @@ module Level1
 	int goomba_y;
 	int number_of_coins = 2;
 
+	wire [31:0] goomba_x_initial;
+	wire [31:0] goomba_y_initial;
+
+	assign goomba_x_initial = 300;
+	assign goomba_y_initial = 360;
+
 	int seconds;
 	wire seconds_done;
 
@@ -116,6 +122,8 @@ module Level1
 		.background(background),
 		.mario_x(mario_x),
 		.mario_y(mario_y),
+		// .goomba_x_initial(goomba_x_initial),
+		// .goomba_y_initial(goomba_y_intitial),
 		.goomba_x(goomba_x),
 		.goomba_y(goomba_y),
 		.lose(mario_hit_goomba)
