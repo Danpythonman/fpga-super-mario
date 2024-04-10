@@ -15,12 +15,11 @@ module AccelerometerMovement
 	output left,
 	output right,
 	output jump,
-
-	output		          		GSENSOR_CS_N,
-	input 		     [2:1]		GSENSOR_INT,
-	output		          		GSENSOR_SCLK,
-	inout 		          		GSENSOR_SDI,
-	inout 		          		GSENSOR_SDO
+	output GSENSOR_CS_N,
+	input [2:1] GSENSOR_INT,
+	output GSENSOR_SCLK,
+	inout GSENSOR_SDI,
+	inout GSENSOR_SDO
 );
 
 	shortint signed data_x;
@@ -29,18 +28,17 @@ module AccelerometerMovement
 	shortint signed data;
 	logic data_valid;
 
-	localparam SPI_CLK_FREQ  = 200;  // SPI Clock (Hz)
-	localparam UPDATE_FREQ   = 1;    // Sampling frequency (Hz)
-
+	localparam CLOCK_FREQUENCY  = 200;
+	localparam UPDATE_FREQUENCY = 1;
 	logic data_update;
 
 	SpiController
 	#(
-		.SPI_CLK_FREQ   (SPI_CLK_FREQ),
-		.UPDATE_FREQ    (UPDATE_FREQ))
+		.CLOCK_FREQUENCY (CLOCK_FREQUENCY),
+		.UPDATE_FREQUENCY(UPDATE_FREQUENCY))
 	SpiController
 	(
-		.reset_n    (reset),
+		.reset      (reset),
 		.clk        (clk),
 		.spi_clk    (clk),
 		.spi_clk_out(spi_clk),
