@@ -36,6 +36,26 @@ module LevelFinish
 	assign goomba_2x = 1000;
 	assign goomba_2y = 1000;
 
+	assign background = '{
+		'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
+		'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
+		'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+		'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+		'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+
+		'{ SKY, SKY, SKY, SKY, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+		'{ SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
+		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
+		'{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, // [15][3]
+
+		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
+		'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+		'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
+	};
+
+	assign win = mario_x >= 580;
+	assign lose = 0;
+
 //	wire seconds_done;
 //
 //	SecondsCounter secondsCounter
@@ -77,8 +97,8 @@ module LevelFinish
 	);
 
 //	logic touch;
-
-//    MarioCoin
+//
+//   MarioCoin
 //	#(
 //		.BDR(BDR),
 //		.SKY(SKY),
@@ -99,42 +119,42 @@ module LevelFinish
 //		.touch(touch)
 //	);
 //	int number_of_coins;
-	always@(posedge vga_clock or negedge reset) begin
-		if (!reset) begin
-			win <= 0;
+//	always@(posedge vga_clock or negedge reset) begin
+//		if (!reset) begin
+//			win <= 0;
 //			number_of_coins <= 1;
-			background <= '{
-				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
-				'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
-				'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-
-				'{ SKY, SKY, SKY, SKY, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
-				'{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, // [15][3]
-
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
-				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
-				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
-			};
-			// background [5][2] <= TKN;
-			// background [2][15] <= TKN;
-			// background [2][9] <= TKN;
-
-		end else begin
-			if (mario_x >= 600 && mario_y >= 120) begin
-				win <= 1;
+//			background <= '{
+//				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR },
+//				'{ GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND, GND },
+//				'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+//				'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+//				'{ SKY, SKY, SKY, SKY, BLK, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+//
+//				'{ SKY, SKY, SKY, SKY, BLK, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+//				'{ SKY, SKY, SKY, SKY, BLK, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
+//				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
+//				'{ SKY, TKN, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, // [15][3]
+//
+//				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY }, 
+//				'{ SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY, SKY },
+//				'{ BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR, BDR }
+//			};
+//			// background [5][2] <= TKN;
+//			// background [2][15] <= TKN;
+//			// background [2][9] <= TKN;
+//
+//		end else begin
+//			if (touch) begin
+//				win <= 1;
 //				background [3][15] <= SKY; // [y][x]
 //				number_of_coins <= number_of_coins - 1;
-			end else begin
-				win <= 0;
-			end
-		end
-	end
+//			end else begin
+//				win <= 0;
+//			end
+//		end
+//	end
 
-//	assign win = number_of_coins == 0;
-	assign lose = 0;
+////	assign win = number_of_coins == 0;
+//	assign lose = 0;
 
 endmodule

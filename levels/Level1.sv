@@ -29,6 +29,8 @@ module Level1
 	output [9:0] leds
 );
 
+	assign goomba_x = 1000;
+	assign goomba_y = 1000;
 	wire seconds_done;
 
 	SecondsCounter secondsCounter
@@ -70,30 +72,30 @@ module Level1
 	);
 
 	wire mario_hit_goomba;
-
-	GoombaMover
-	#(
-		.BDR(BDR),
-		.SKY(SKY),
-		.BLK(BLK),
-		.GND(GND),
-		.CHARACTER_WIDTH(CHARACTER_WIDTH),
-		.SCREEN_WIDTH(SCREEN_WIDTH),
-		.SCREEN_HEIGHT(SCREEN_HEIGHT),
-		.BLOCK_WIDTH(BLOCK_WIDTH)
-	) goombaMover (
-		.vga_clock(vga_clock),
-		.reset(reset),
-		.left(left_switch),
-		.right(right_switch),
-		.jump(jump_button),
-		.background(background),
-		.mario_x(mario_x),
-		.mario_y(mario_y),
-		.goomba_x(goomba_x),
-		.goomba_y(goomba_y),
-		.lose(mario_hit_goomba)
-	);
+//
+//	GoombaMover
+//	#(
+//		.BDR(BDR),
+//		.SKY(SKY),
+//		.BLK(BLK),
+//		.GND(GND),
+//		.CHARACTER_WIDTH(CHARACTER_WIDTH),
+//		.SCREEN_WIDTH(SCREEN_WIDTH),
+//		.SCREEN_HEIGHT(SCREEN_HEIGHT),
+//		.BLOCK_WIDTH(BLOCK_WIDTH)
+//	) goombaMover (
+//		.vga_clock(vga_clock),
+//		.reset(reset),
+//		.left(left_switch),
+//		.right(right_switch),
+//		.jump(jump_button),
+//		.background(background),
+//		.mario_x(mario_x),
+//		.mario_y(mario_y),
+//		.goomba_x(goomba_x),
+//		.goomba_y(goomba_y),
+//		.lose(mario_hit_goomba)
+//	);
 
 	logic [2:0] touch;
 

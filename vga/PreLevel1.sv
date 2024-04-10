@@ -35,8 +35,8 @@ module PreLevel1
 
 	assign mario_x = 100;
 	assign mario_y = 360;
-	assign goomba_x = 300;
-	assign goomba_y = 360;
+	assign goomba_x = 1000;
+	assign goomba_y = 1000;
 
 	always@(posedge vga_clock or negedge reset) begin
 		background <= '{

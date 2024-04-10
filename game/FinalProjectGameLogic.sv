@@ -378,8 +378,8 @@ module FinalProjectGameLogic
 				background = start_screen_background;
 				mario_x    = start_screen_mario_x;
 				mario_y    = start_screen_mario_y;
-				goomba_x   = start_screen_goomba_x;
-				goomba_y   = start_screen_goomba_y;
+				goomba_x   = 1000;
+				goomba_y   = 1000;
 				goomba_2x   = 1000;
 				goomba_2y   = 1000;
 				show_hearts = 0;
@@ -395,8 +395,8 @@ module FinalProjectGameLogic
 				background = prelevel1_background;
 				mario_x    = prelevel1_mario_x;
 				mario_y    = prelevel1_mario_y;
-				goomba_x   = prelevel1_goomba_x;
-				goomba_y   = prelevel1_goomba_y;
+				goomba_x   = 1000;
+				goomba_y   = 1000;
 				goomba_2x   = 1000;
 				goomba_2y   = 1000;
 				show_hearts = 1;
@@ -412,8 +412,8 @@ module FinalProjectGameLogic
 				background = level1_background;
 				mario_x    = level1_mario_x;
 				mario_y    = level1_mario_y;
-				goomba_x   = level1_goomba_x;
-				goomba_y   = level1_goomba_y;
+				goomba_x   = 1000;
+				goomba_y   = 1000;
 				goomba_2x   = 1000;
 				goomba_2y   = 1000;
 				show_hearts = 1;
@@ -429,8 +429,8 @@ module FinalProjectGameLogic
 				background = level2_background;
 				mario_x    = level2_mario_x;
 				mario_y    = level2_mario_y;
-				goomba_x   = level2_goomba_x;
-				goomba_y   = level2_goomba_y;
+				goomba_x   = 1000;
+				goomba_y   = 1000;
 				goomba_2x   = 1000;
 				goomba_2y   = 1000;
 				show_hearts = 1;
@@ -480,8 +480,8 @@ module FinalProjectGameLogic
 				background = win_screen_background;
 				mario_x    = win_screen_mario_x;
 				mario_y    = win_screen_mario_y;
-				goomba_x   = win_screen_goomba_x;
-				goomba_y   = win_screen_goomba_y;
+				goomba_x   = 1000;
+				goomba_y   = 1000;
 				goomba_2x   = 1000;
 				goomba_2y   = 1000;
 				show_hearts = 0;
@@ -497,8 +497,8 @@ module FinalProjectGameLogic
 				background = game_over_background;
 				mario_x    = game_over_mario_x;
 				mario_y    = game_over_mario_y;
-				goomba_x   = game_over_goomba_x;
-				goomba_y   = game_over_goomba_y;
+				goomba_x   = 1000;
+				goomba_y   = 1000;
 				goomba_2x   = 1000;
 				goomba_2y   = 1000;
 				show_hearts = 0;

@@ -67,7 +67,7 @@ module GoombaLeftRightMover
 						state <= LOSE;
 					else if (background[goomba_top][goomba_left] == BLK 
 							|| background[goomba_bottom][goomba_left] == BLK
-							|| goomba_x <= 0)
+							|| goomba_x == 0)
 						state <= RIGHT;
 					else
 						state <= LEFT;
@@ -99,6 +99,12 @@ module GoombaLeftRightMover
 		end
 	end
 
+	assign leds[4] = goomba_x < -300;
+	assign leds[3] = goomba_x < 0;
+	assign leds[2] = goomba_x < 200;
+	assign leds[1] = goomba_x < 640 && goomba_x > 0;
+	assign leds[0] = goomba_x > 500;
+
 	/*
 	 * Deciding outputs. This is a Moore-type FSM because outputs are dependant
 	 * on state.
@@ -108,27 +114,22 @@ module GoombaLeftRightMover
 			RESET: begin
 				lose <= 0;
 				goomba_x <= STARTX;
-				leds <= 5'b00001;
 			end
 			LEFT: begin
 				lose <= 0;
 				goomba_x <= goomba_x - 1;
-				leds <= 5'b00010;
 			end
 			RIGHT: begin
 				lose <= 0;
 				goomba_x <= goomba_x + 1;
-				leds <= 5'b00100;
 			end
 			KILL: begin
 				lose <= 0;
 				goomba_x <= 1000; // put goomba off screen
-				leds <= 5'b0100;
 			end
 			LOSE: begin
 				lose <= 1;
 				goomba_x <= goomba_x;
-				leds <= 5'b10000;
 			end
 		endcase
 	end
